@@ -27,6 +27,7 @@ import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import io.fabric.sdk.android.Fabric;
 
+import org.fossasia.phimpme.config.Config;
 import org.fossasia.phimpme.gallery.data.Album;
 import org.fossasia.phimpme.gallery.data.HandlingAlbums;
 import org.fossasia.phimpme.utilities.Constants;
@@ -51,6 +52,8 @@ public class MyApplication extends Application {
         return albums.dispAlbums.size() > 0 ? albums.getCurrentAlbum() : Album.getEmptyAlbum();
     }
 
+    private Config config;
+
     @Override
     public void onCreate() {
 
@@ -68,12 +71,12 @@ public class MyApplication extends Application {
 
         MultiDex.install(this);
 
-        TwitterConfig config = new TwitterConfig.Builder(this)
+        TwitterConfig twitterConfig = new TwitterConfig.Builder(this)
                 .logger(new DefaultLogger(Log.DEBUG))
                 .twitterAuthConfig(new TwitterAuthConfig(Constants.TWITTER_CONSUMER_KEY, Constants.TWITTER_CONSUMER_SECRET))
                 .debug(true)
                 .build();
-        Twitter.initialize(config);
+        Twitter.initialize(twitterConfig);
 
         /**
          * Realm initialization
@@ -97,6 +100,8 @@ public class MyApplication extends Application {
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
                         .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
                         .build());
+
+        Config.get().init(this);
     }
 
     public static RefWatcher getRefWatcher(Context context){
@@ -106,6 +111,7 @@ public class MyApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     public HandlingAlbums getAlbums() {

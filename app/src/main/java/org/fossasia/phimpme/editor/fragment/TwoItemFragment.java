@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import org.fossasia.phimpme.MyApplication;
 import org.fossasia.phimpme.R;
+import org.fossasia.phimpme.config.Config;
 import org.fossasia.phimpme.editor.EditImageActivity;
 
 public class TwoItemFragment extends BaseEditFragment implements View.OnClickListener{
@@ -55,12 +56,16 @@ public class TwoItemFragment extends BaseEditFragment implements View.OnClickLis
         if (mode == EditImageActivity.MODE_WRITE) {
             icon1.setImageResource(R.drawable.ic_text);
             icon2.setImageResource(R.drawable.ic_paint);
+            Config.get().changeIcon(icon1, "editor_text");
+            Config.get().changeIcon(icon2, "editor_paint");
 
             text1.setText(getString(R.string.text));
             text2.setText(getString(R.string.paint));
         }else {
             icon1.setImageResource(R.drawable.ic_crop);
             icon2.setImageResource(R.drawable.ic_rotate);
+            Config.get().changeIcon(icon1, "editor_crop");
+            Config.get().changeIcon(icon2, "editor_rotate");
 
             text1.setText(getString(R.string.crop));
             text2.setText(getString(R.string.rotate));

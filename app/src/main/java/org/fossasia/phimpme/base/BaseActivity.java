@@ -3,7 +3,6 @@ package org.fossasia.phimpme.base;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,10 +20,6 @@ import org.fossasia.phimpme.accounts.AccountActivity;
 import org.fossasia.phimpme.gallery.activities.LFMainActivity;
 import org.fossasia.phimpme.gallery.util.PreferenceUtil;
 import org.fossasia.phimpme.opencamera.Camera.CameraActivity;
-
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
-import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 public abstract class BaseActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -62,8 +57,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
          nav_acc = (BottomNavigationItemView) findViewById(R.id.navigation_accounts);
 
         int checkStoragePermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if(checkStoragePermission  == PackageManager.PERMISSION_GRANTED)
-            presentShowcaseSequence(); // one second delay
+/*        if(checkStoragePermission  == PackageManager.PERMISSION_GRANTED)
+            presentShowcaseSequence(); // one second delay*/
 
         SP = PreferenceUtil.getInstance(getApplicationContext());
     }
@@ -74,7 +69,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         isSWNavBarChecked = SP.getBoolean(getString(R.string.preference_colored_nav_bar),true);
     }
 
-    private void presentShowcaseSequence() {
+/*    private void presentShowcaseSequence() {
 
         ShowcaseConfig config = new ShowcaseConfig();
         config.setDelay(500); // half second between each showcase view
@@ -111,7 +106,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         );
 
         sequence.start();
-    }
+    }*/
 
 
     @Override

@@ -12,7 +12,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -30,11 +29,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -98,7 +94,6 @@ import org.fossasia.phimpme.gallery.util.SecurityHelper;
 import org.fossasia.phimpme.gallery.util.StringUtils;
 import org.fossasia.phimpme.gallery.views.CustomScrollBarRecyclerView;
 import org.fossasia.phimpme.gallery.views.GridSpacingItemDecoration;
-import org.fossasia.phimpme.uploadhistory.UploadHistory;
 import org.fossasia.phimpme.utilities.ActivitySwitchHelper;
 import org.fossasia.phimpme.utilities.Constants;
 import org.fossasia.phimpme.utilities.NotificationHandler;
@@ -190,46 +185,16 @@ public class LFMainActivity extends SharedMediaActivity {
     protected Toolbar toolbar;
     @BindView(R.id.swipeRefreshLayout)
     protected SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.drawer_layout)
-    protected DrawerLayout mDrawerLayout;
+    @BindView(R.id.root_layout)
+    protected FrameLayout rootLayout;
     @BindView(R.id.fab_scroll_up)
     protected FloatingActionButton fabScrollUp;
-    @BindView(R.id.Drawer_Setting_Item)
-    protected TextView drawerSettingText;
-    @BindView(R.id.Drawer_About_Item)
-    protected TextView drawerAboutText;
-    @BindView(R.id.Drawer_share_Item)
-    protected TextView drawerShareText;
-    @BindView(R.id.Drawer_rate_Item)
-    protected TextView drawerRateText;
-    @BindView(R.id.Drawer_Upload_Item)
-    protected TextView drawerUploadText;
-    @BindView(R.id.Drawer_Setting_Icon)
-    protected IconicsImageView drawerSettingIcon;
-    @BindView(R.id.Drawer_About_Icon)
-    protected IconicsImageView drawerAboutIcon;
-    @BindView(R.id.Drawer_share_Icon)
-    protected IconicsImageView drawerShareIcon;
-    @BindView(R.id.Drawer_rate_Icon)
-    protected IconicsImageView drawerRateIcon;
-    @BindView(R.id.Drawer_Upload_Icon)
-    protected IconicsImageView drawerUploadIcon;
-    @BindView(R.id.drawer_scrollbar)
-    protected ScrollView scrollView;
     @BindView(R.id.appbar_toolbar)
     protected View toolbari;
     @BindView(R.id.nothing_to_show)
     protected TextView nothingToShow;
     @BindView(R.id.no_search_results)
     protected TextView textView;
-    @BindView(R.id.Drawer_Default_Icon)
-    protected IconicsImageView defaultIcon;
-    @BindView(R.id.Drawer_hidden_Icon)
-    protected IconicsImageView hiddenIcon;
-    @BindView(R.id.Drawer_Default_Item)
-    protected TextView defaultText;
-    @BindView(R.id.Drawer_hidden_Item)
-    protected TextView hiddenText;
     @BindView(R.id.star_image_view)
     protected ImageView starImageView;
 
@@ -538,7 +503,7 @@ public class LFMainActivity extends SharedMediaActivity {
                                         passco[0] = true;
                                         securityObj.getTextInputLayout().setVisibility(View.VISIBLE);
                                         SnackBarHandler
-                                                .showWithBottomMargin(mDrawerLayout, getString(R.string.wrong_password),
+                                                .showWithBottomMargin(rootLayout, getString(R.string.wrong_password),
                                                         navigationView.getHeight());
                                         editTextPassword.getText().clear();
                                         editTextPassword.requestFocus();
@@ -657,7 +622,7 @@ public class LFMainActivity extends SharedMediaActivity {
                                         passco[0] =true;
                                         securityObj.getTextInputLayout().setVisibility(View.VISIBLE);
                                         SnackBarHandler
-                                                .showWithBottomMargin(mDrawerLayout, getString(R.string.wrong_password),
+                                                .showWithBottomMargin(rootLayout, getString(R.string.wrong_password),
                                                         navigationView.getHeight());
                                         editTextPassword.getText().clear();
                                         editTextPassword.requestFocus();
@@ -722,7 +687,6 @@ public class LFMainActivity extends SharedMediaActivity {
         ButterKnife.bind(this);
 
         BottomNavigationView navigationView = (BottomNavigationView) findViewById(R.id.bottombar);
-        favicon = (IconicsImageView) findViewById(R.id.Drawer_favourite_Icon);
         
         rvAlbums = (CustomScrollBarRecyclerView) findViewById(R.id.grid_albums);
         rvMedia  = (CustomScrollBarRecyclerView) findViewById(R.id.grid_photos);
@@ -753,8 +717,8 @@ public class LFMainActivity extends SharedMediaActivity {
                     if (!localFolder) {
                         hidden = false;
                         localFolder = true;
-                        findViewById(R.id.ll_drawer_hidden).setBackgroundColor(Color.TRANSPARENT);
-                        findViewById(R.id.ll_drawer_Default).setBackgroundColor(getHighlightedItemColor());
+                        //findViewById(R.id.ll_drawer_hidden).setBackgroundColor(Color.TRANSPARENT);
+                        //findViewById(R.id.ll_drawer_Default).setBackgroundColor(getHighlightedItemColor());
                         tint();
                     }
                     displayAlbums();
@@ -794,7 +758,7 @@ public class LFMainActivity extends SharedMediaActivity {
     private void displayCurrentAlbumMedia(boolean reload) {
         toolbar.setTitle(getAlbum().getName());
         toolbar.setNavigationIcon(getToolbarIcon(GoogleMaterial.Icon.gmd_arrow_back));
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        //rootLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         mediaAdapter.swapDataSet(getAlbum().getMedia(), false);
         if (reload) new PreparePhotosTask().execute();
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -811,7 +775,7 @@ public class LFMainActivity extends SharedMediaActivity {
         clearSelectedPhotos();
         toolbar.setTitle(getString(R.string.all_media));
         toolbar.setNavigationIcon(getToolbarIcon(GoogleMaterial.Icon.gmd_arrow_back));
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        //rootLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         mediaAdapter.swapDataSet(listAll, false);
         if (reload) new PrepareAllPhotos().execute();
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -850,7 +814,7 @@ public class LFMainActivity extends SharedMediaActivity {
         toolbar.setTitle(getResources().getString(R.string.favourite_title));
         getfavouriteslist();
         toolbar.setNavigationIcon(getToolbarIcon(GoogleMaterial.Icon.gmd_arrow_back));
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//        rootLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         fav_photos=true;
         mediaAdapter.swapDataSet(favouriteslist, true);
         if(fav_photos){
@@ -878,14 +842,14 @@ public class LFMainActivity extends SharedMediaActivity {
         } else {
             toolbar.setTitle(getString(R.string.hidden_folder));
         }
-        toolbar.setNavigationIcon(getToolbarIcon(GoogleMaterial.Icon.gmd_menu));
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        toolbar.setNavigationIcon(getToolbarIcon(GoogleMaterial.Icon.gmd_arrow_back));
+    //    rootLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         albumsAdapter.swapDataSet(getAlbums().dispAlbums);
         if (reload) new PrepareAlbumTask().execute();
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+       toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDrawerLayout.openDrawer(GravityCompat.START);
+               finish();
             }
         });
 
@@ -1081,8 +1045,8 @@ public class LFMainActivity extends SharedMediaActivity {
         });
 
         /**** DRAWER ****/
-        mDrawerLayout.addDrawerListener(new ActionBarDrawerToggle(this,
-                mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
+       /* rootLayout.addDrawerListener(new ActionBarDrawerToggle(this,
+                rootLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             public void onDrawerClosed(View view) {
                 //Put your code here
                 // materialMenu.animateIconState(MaterialMenuDrawable.IconState.BURGER);
@@ -1109,7 +1073,7 @@ public class LFMainActivity extends SharedMediaActivity {
                 //Put your code here
                 //materialMenu.animateIconState(MaterialMenuDrawable.IconState.ARROW);
             }
-        });
+        });/
 
         /**
          * Floating Action Button to Scroll Up
@@ -1199,7 +1163,7 @@ public class LFMainActivity extends SharedMediaActivity {
                 // Persist URI in shared preference so that you can use it later.
                 ContentHelper.saveSdCardInfo(getApplicationContext(), treeUri);
                 getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                SnackBarHandler.showWithBottomMargin(mDrawerLayout, getString(R.string.got_permission_wr_sdcard), 0);
+                SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.got_permission_wr_sdcard), 0);
 
             }
         }
@@ -1244,7 +1208,7 @@ public class LFMainActivity extends SharedMediaActivity {
         setStatusBarColor();
         setNavBarColor();
 
-        setDrawerTheme();
+        //setDrawerTheme();
         rvAlbums.setBackgroundColor(getBackgroundColor());
         rvMedia.setBackgroundColor(getBackgroundColor());
         rvAlbums.setScrollBarColor(getPrimaryColor());
@@ -1252,7 +1216,7 @@ public class LFMainActivity extends SharedMediaActivity {
         mediaAdapter.updatePlaceholder(getApplicationContext());
         albumsAdapter.updateTheme();
         /**** DRAWER ****/
-        setScrollViewColor(scrollView);
+        //setScrollViewColor(scrollView);
 
         /**** recyclers drawable *****/
         Drawable drawableScrollBar = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_scrollbar);
@@ -1263,14 +1227,14 @@ public class LFMainActivity extends SharedMediaActivity {
         fabScrollUp.setAlpha(0.7f);
     }
 
-    private void setDrawerTheme() {
+   /* private void setDrawerTheme() {
 
         findViewById(R.id.Drawer_Header).setBackgroundColor(getPrimaryColor());
         findViewById(R.id.Drawer_Body).setBackgroundColor(getDrawerBackground());
         findViewById(R.id.drawer_scrollbar).setBackgroundColor(getDrawerBackground());
         findViewById(R.id.Drawer_Body_Divider).setBackgroundColor(getIconColor());
 
-        /** TEXT VIEWS **/
+
         int color = getTextColor();
         defaultText.setTextColor(color);
         drawerSettingText.setTextColor(color);
@@ -1289,7 +1253,7 @@ public class LFMainActivity extends SharedMediaActivity {
         ((TextView) findViewById(R.id.Drawer_Upload_Item)).setTextColor(color);
         ((TextView) findViewById(R.id.Drawer_favourite_Item)).setTextColor(color);
 
-        /** ICONS **/
+
         color = getIconColor();
         defaultIcon.setColor(color);
         drawerSettingIcon.setColor(color);
@@ -1311,7 +1275,7 @@ public class LFMainActivity extends SharedMediaActivity {
             @Override
             public void onClick(View v) {
                 settings = true;
-                mDrawerLayout.closeDrawer(GravityCompat.START);
+                //rootLayout.closeDrawer(GravityCompat.START);
             }
         });
 
@@ -1319,7 +1283,7 @@ public class LFMainActivity extends SharedMediaActivity {
             @Override
             public void onClick(View v) {
                 about = true;
-                mDrawerLayout.closeDrawer(GravityCompat.START);
+                //rootLayout.closeDrawer(GravityCompat.START);
             }
         });
 
@@ -1327,7 +1291,7 @@ public class LFMainActivity extends SharedMediaActivity {
             @Override
             public void onClick(View v) {
                 favourites = true;
-                mDrawerLayout.closeDrawer(GravityCompat.START);
+                //rootLayout.closeDrawer(GravityCompat.START);
             }
         });
 
@@ -1335,7 +1299,7 @@ public class LFMainActivity extends SharedMediaActivity {
             @Override
             public void onClick(View v) {
                 uploadHistory = true;
-                mDrawerLayout.closeDrawer(GravityCompat.START);
+                //rootLayout.closeDrawer(GravityCompat.START);
             }
         });
 
@@ -1348,7 +1312,7 @@ public class LFMainActivity extends SharedMediaActivity {
                 tint();
                 toolbar.setTitle(getString(R.string.local_folder));
                 hidden = false;
-                mDrawerLayout.closeDrawer(GravityCompat.START);
+                //rootLayout.closeDrawer(GravityCompat.START);
                 new PrepareAlbumTask().execute();
             }
         });
@@ -1399,13 +1363,13 @@ public class LFMainActivity extends SharedMediaActivity {
                         public void onClick(View v) {
                             if (securityObj.checkPassword(editTextPassword.getText().toString())) {
                                 hidden = true;
-                                mDrawerLayout.closeDrawer(GravityCompat.START);
+                                //rootLayout.closeDrawer(GravityCompat.START);
                                 new PrepareAlbumTask().execute();
                                 passwordDialog.dismiss();
                             } else {
                                 passco[0] = true;
                                 securityObj.getTextInputLayout().setVisibility(View.VISIBLE);
-                                SnackBarHandler.showWithBottomMargin(mDrawerLayout, getString(R.string.wrong_password), 0);
+                                SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.wrong_password), 0);
                                 editTextPassword.getText().clear();
                                 editTextPassword.requestFocus();
                             }
@@ -1413,7 +1377,7 @@ public class LFMainActivity extends SharedMediaActivity {
                     });
                 } else {
                     hidden = true;
-                    mDrawerLayout.closeDrawer(GravityCompat.START);
+                    //rootLayout.closeDrawer(GravityCompat.START);
                     new PrepareAlbumTask().execute();
                 }
             }
@@ -1423,7 +1387,7 @@ public class LFMainActivity extends SharedMediaActivity {
             @Override
             public void onClick(View v) {
                 onInviteClicked();
-                mDrawerLayout.closeDrawer(GravityCompat.START);
+                //rootLayout.closeDrawer(GravityCompat.START);
             }
         });
         findViewById(R.id.ll_rate_phimpme).setOnClickListener(new View.OnClickListener() {
@@ -1435,10 +1399,10 @@ public class LFMainActivity extends SharedMediaActivity {
                 } catch (android.content.ActivityNotFoundException anfe) {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
                 }
-                mDrawerLayout.closeDrawer(GravityCompat.START);
+                //rootLayout.closeDrawer(GravityCompat.START);
             }
         });
-    }
+    }*/
 
     private void onInviteClicked() {
         Intent sendIntent = new Intent();
@@ -1465,11 +1429,11 @@ public class LFMainActivity extends SharedMediaActivity {
                 if (hidden)
                     toolbar.setTitle(getString(R.string.hidden_folder));
                 else toolbar.setTitle(getString(R.string.local_folder));
-                toolbar.setNavigationIcon(getToolbarIcon(GoogleMaterial.Icon.gmd_menu));
+                toolbar.setNavigationIcon(getToolbarIcon(GoogleMaterial.Icon.gmd_arrow_back));
                 toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mDrawerLayout.openDrawer(GravityCompat.START);
+                        finish();
                     }
                 });
             }
@@ -1958,12 +1922,12 @@ public class LFMainActivity extends SharedMediaActivity {
                     protected void onPostExecute(Boolean result) {
                         if (result) {
                             if (!favouriteImagePresent) {
-                                SnackBarHandler.show(mDrawerLayout, getResources().getString(R.string.invalid_selection));
+                                SnackBarHandler.show(rootLayout, getResources().getString(R.string.invalid_selection));
                             } else {
                                 if (imagesUnfavourited >= 2)
-                                    SnackBarHandler.show(mDrawerLayout, imagesUnfavourited + " " + getResources().getString(R.string.remove_from_favourite));
+                                    SnackBarHandler.show(rootLayout, imagesUnfavourited + " " + getResources().getString(R.string.remove_from_favourite));
                                 else
-                                    SnackBarHandler.show(mDrawerLayout, getResources().getString(R.string.single_image_removed));
+                                    SnackBarHandler.show(rootLayout, getResources().getString(R.string.single_image_removed));
                             }
                             if (fav_photos) {
                                 clearSelectedPhotos();
@@ -2156,7 +2120,7 @@ public class LFMainActivity extends SharedMediaActivity {
                                     else {
                                         passco[0] = true;
                                         securityObj.getTextInputLayout().setVisibility(View.VISIBLE);
-                                        SnackBarHandler.showWithBottomMargin(mDrawerLayout, getString(R.string.wrong_password), navigationView.getHeight());
+                                        SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.wrong_password), navigationView.getHeight());
                                         editTextPassword.getText().clear();
                                         editTextPassword.requestFocus();
                                     }
@@ -2416,7 +2380,7 @@ public class LFMainActivity extends SharedMediaActivity {
                         else runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                SnackBarHandler.showWithBottomMargin(mDrawerLayout, getString(R.string.affix_error), navigationView.getHeight());
+                                SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.affix_error), navigationView.getHeight());
 
                             }
                         });
@@ -2577,10 +2541,10 @@ public class LFMainActivity extends SharedMediaActivity {
                                 finishEditMode();
                                 invalidateOptionsMenu();
                                 if (numberOfImagesMoved > 1)
-                                    SnackBarHandler.showWithBottomMargin(mDrawerLayout, getString(R.string.photos_moved_successfully), navigationView.getHeight());
+                                    SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.photos_moved_successfully), navigationView.getHeight());
                                 else
 
-                                    SnackBarHandler.showWithBottomMargin(mDrawerLayout, getString(R.string.photo_moved_successfully), navigationView.getHeight());
+                                    SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.photo_moved_successfully), navigationView.getHeight());
 
                             } else if (numberOfImagesMoved == -1 && getAlbum().getPath().equals(path)) {
                                 //moving to the same folder
@@ -2606,7 +2570,7 @@ public class LFMainActivity extends SharedMediaActivity {
                                     public void onClick(DialogInterface dialog, int id) {
                                         finishEditMode();
                                         invalidateOptionsMenu();
-                                        SnackBarHandler.showWithBottomMargin(mDrawerLayout, getString(R.string.photo_moved_successfully), navigationView.getHeight());
+                                        SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.photo_moved_successfully), navigationView.getHeight());
 
                                     }
                                 });
@@ -2646,7 +2610,7 @@ public class LFMainActivity extends SharedMediaActivity {
                         public void folderSelected(String path) {
                             swipeRefreshLayout.setRefreshing(true);
                             if (getAlbums().moveSelectedAlbum(LFMainActivity.this, path)) {
-                                SnackBarHandler.showWithBottomMargin(mDrawerLayout, getString(R.string.moved_target_folder_success), SnackBarHandler.LONG);
+                                SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.moved_target_folder_success), SnackBarHandler.LONG);
                                 getAlbums().deleteSelectedAlbums(LFMainActivity.this);
                                 getAlbums().clearSelectedAlbums();
                                 new PrepareAlbumTask().execute();
@@ -2761,7 +2725,7 @@ public class LFMainActivity extends SharedMediaActivity {
                                             editTextNewName.getText().toString());
                                     albumsAdapter.notifyItemChanged(index);
                                 } else {
-                                    SnackBarHandler.showWithBottomMargin(mDrawerLayout, getString(R.string.rename_no_change), navigationView.getHeight());
+                                    SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.rename_no_change), navigationView.getHeight());
                                     rename = true;
                                 }
                             } else {
@@ -2770,22 +2734,22 @@ public class LFMainActivity extends SharedMediaActivity {
                                     toolbar.setTitle(getAlbum().getName());
                                     mediaAdapter.notifyDataSetChanged();
                                 } else {
-                                    SnackBarHandler.showWithBottomMargin(mDrawerLayout, getString(R.string.rename_no_change), navigationView.getHeight());
+                                    SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.rename_no_change), navigationView.getHeight());
                                     rename = true;
                                 }
                             }
                             renameDialog.dismiss();
                             if (success) {
-                                SnackBarHandler.showWithBottomMargin(mDrawerLayout, getString(R.string.rename_succes), navigationView.getHeight());
+                                SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.rename_succes), navigationView.getHeight());
                                 getAlbums().clearSelectedAlbums();
                                 invalidateOptionsMenu();
                             } else if (!rename) {
-                                SnackBarHandler.showWithBottomMargin(mDrawerLayout, getString(R.string.rename_error), navigationView.getHeight());
+                                SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.rename_error), navigationView.getHeight());
                                 requestSdCardPermissions();
                             }
                             swipeRefreshLayout.setRefreshing(false);
                         } else {
-                            SnackBarHandler.showWithBottomMargin(mDrawerLayout, getString(R.string.insert_something), navigationView.getHeight());
+                            SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.insert_something), navigationView.getHeight());
                             editTextNewName.requestFocus();
                         }
                     }
@@ -2927,7 +2891,7 @@ public class LFMainActivity extends SharedMediaActivity {
     }
 
     private void tint() {
-        if (localFolder) {
+        /*if (localFolder) {
             defaultIcon.setColor(getPrimaryColor());
             defaultText.setTextColor(getPrimaryColor());
             hiddenIcon.setColor(getIconColor());
@@ -2937,7 +2901,7 @@ public class LFMainActivity extends SharedMediaActivity {
             hiddenText.setTextColor(getPrimaryColor());
             defaultIcon.setColor(getIconColor());
             defaultText.setTextColor(getTextColor());
-        }
+        }*/
     }
 
     /**
@@ -2956,41 +2920,37 @@ public class LFMainActivity extends SharedMediaActivity {
         if (editMode) finishEditMode();
         else {
             if (albumsMode) {
-                if (mDrawerLayout.isDrawerOpen(GravityCompat.START))
-                    mDrawerLayout.closeDrawer(GravityCompat.START);
-                else {
-                    if (doubleBackToExitPressedOnce && isTaskRoot())
-                        finish();
-                    else if (isTaskRoot()) {
-                        doubleBackToExitPressedOnce = true;
-                        View rootView = LFMainActivity.this.getWindow().getDecorView().findViewById(android.R.id.content);
-                        Snackbar snackbar = Snackbar
-                                .make(rootView, R.string.press_back_again_to_exit, Snackbar.LENGTH_LONG)
-                                .setAction(R.string.exit, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        finishAffinity();
-                                    }
-                                })
-                                .setActionTextColor(getAccentColor());
-                        View sbView = snackbar.getView();
-                        final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) sbView.getLayoutParams();
-                        params.setMargins(params.leftMargin,
-                                params.topMargin,
-                                params.rightMargin,
-                                params.bottomMargin + navigationView.getHeight());
-                        sbView.setLayoutParams(params);
-                        snackbar.show();
+                if (doubleBackToExitPressedOnce && isTaskRoot())
+                    finish();
+                else if (isTaskRoot()) {
+                    doubleBackToExitPressedOnce = true;
+                    View rootView = LFMainActivity.this.getWindow().getDecorView().findViewById(android.R.id.content);
+                    Snackbar snackbar = Snackbar
+                            .make(rootView, R.string.press_back_again_to_exit, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.exit, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    finishAffinity();
+                                }
+                            })
+                            .setActionTextColor(getAccentColor());
+                    View sbView = snackbar.getView();
+                    final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) sbView.getLayoutParams();
+                    params.setMargins(params.leftMargin,
+                            params.topMargin,
+                            params.rightMargin,
+                            params.bottomMargin + navigationView.getHeight());
+                    sbView.setLayoutParams(params);
+                    snackbar.show();
 
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                doubleBackToExitPressedOnce = false;
-                            }
-                        }, 2000);
-                    } else
-                        super.onBackPressed();
-                }
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            doubleBackToExitPressedOnce = false;
+                        }
+                    }, 2000);
+                } else
+                    super.onBackPressed();
             } else {
                 displayAlbums();
             }
@@ -3053,7 +3013,7 @@ public class LFMainActivity extends SharedMediaActivity {
             NotificationHandler.actionPassed(R.string.zip_completion);
             String path = getAlbums().getSelectedAlbum(0).getParentsFolders().get(1) + getAlbums().getSelectedAlbum
                     (0).getName() + ".zip";
-            SnackBarHandler.show(mDrawerLayout, getResources().getString(R.string.zip_location) +
+            SnackBarHandler.show(rootLayout, getResources().getString(R.string.zip_location) +
                     path);
             getAlbums().clearSelectedAlbums();
             albumsAdapter.notifyDataSetChanged();
@@ -3225,11 +3185,11 @@ public class LFMainActivity extends SharedMediaActivity {
             swipeRefreshLayout.setRefreshing(false);
             finishEditMode();
             if (count == 0) {
-                SnackBarHandler.show(mDrawerLayout, getResources().getString(R.string.check_favourite_multipleitems));
+                SnackBarHandler.show(rootLayout, getResources().getString(R.string.check_favourite_multipleitems));
             } else if (count == 1) {
-                SnackBarHandler.show(mDrawerLayout,getResources().getString(R.string.add_favourite) );
+                SnackBarHandler.show(rootLayout,getResources().getString(R.string.add_favourite) );
             } else {
-                SnackBarHandler.show(mDrawerLayout, count + " " + getResources().getString(R.string
+                SnackBarHandler.show(rootLayout, count + " " + getResources().getString(R.string
                         .add_favourite_multiple));
             }
             mediaAdapter.notifyDataSetChanged();
@@ -3384,9 +3344,9 @@ public class LFMainActivity extends SharedMediaActivity {
                 swipeRefreshLayout.setRefreshing(false);
                 finishEditMode();
                 if (moveAction)
-                    SnackBarHandler.showWithBottomMargin(mDrawerLayout, getString(R.string.photos_moved_successfully), navigationView.getHeight());
+                    SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.photos_moved_successfully), navigationView.getHeight());
                 else if (copyAction)
-                    SnackBarHandler.showWithBottomMargin(mDrawerLayout, getString(R.string.copied_successfully), navigationView.getHeight());
+                    SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.copied_successfully), navigationView.getHeight());
             } else
                 requestSdCardPermissions();
         }

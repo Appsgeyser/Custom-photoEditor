@@ -22,7 +22,9 @@ import android.widget.TextView;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.typeface.IIcon;
 
+import org.fossasia.phimpme.MyApplication;
 import org.fossasia.phimpme.R;
+import org.fossasia.phimpme.config.Config;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -34,301 +36,376 @@ import java.util.ArrayList;
 
 public class ThemeHelper {
 
-  public static final int DARK_THEME = 2;
-  public static final int LIGHT_THEME = 1;
-  public static final int AMOLED_THEME = 3;
+    public static final int DARK_THEME = 2;
+    public static final int LIGHT_THEME = 1;
+    public static final int AMOLED_THEME = 3;
 
-  private PreferenceUtil SP;
-  private Context context;
+    private PreferenceUtil SP;
+    private Context context;
 
-  private int baseTheme;
-  private int primaryColor;
-  private int accentColor;
+    private int baseTheme;
+    private int primaryColor;
+    private int accentColor;
+    private Config config;
 
-  public ThemeHelper(Context context) {
-	this.SP = PreferenceUtil.getInstance(context);
-	this.context = context;
-	updateTheme();
-  }
+    public ThemeHelper(Context context) {
+        this.SP = PreferenceUtil.getInstance(context);
+        this.context = context;
+        config = Config.get();
+        updateTheme();
+    }
 
-  public void updateTheme(){
-	this.primaryColor = SP.getInt(context.getString(R.string.preference_primary_color),
-			getColor(R.color.md_light_blue_300));
-	this.accentColor = SP.getInt(context.getString(R.string.preference_accent_color),
-			getColor(R.color.md_light_blue_500));
-	baseTheme = SP.getInt(context.getString(R.string.preference_base_theme), LIGHT_THEME);
-  }
+    public void updateTheme() {
+        this.primaryColor = SP.getInt(context.getString(R.string.preference_primary_color),
+                config.getPrimaryColor());
+        this.accentColor = SP.getInt(context.getString(R.string.preference_accent_color),
+                config.getAccentColor());
+        baseTheme = SP.getInt(context.getString(R.string.preference_base_theme), LIGHT_THEME);
+    }
 
-  public int getPrimaryColor() {
-	return primaryColor;
-  }
+    public int getPrimaryColor() {
+        return primaryColor;
+    }
 
-  public int getAccentColor() {
-	return accentColor;
-  }
+    public int getAccentColor() {
+        return accentColor;
+    }
 
-  public int getBaseTheme(){ return baseTheme; }
+    public int getBaseTheme() {
+        return baseTheme;
+    }
 
-  public static int getPrimaryColor(Context context) {
-	PreferenceUtil SP = PreferenceUtil.getInstance(context);
-	return SP.getInt(context.getString(R.string.preference_primary_color),
-			ContextCompat.getColor(context, R.color.md_indigo_500));
-  }
+    public static int getPrimaryColor(Context context) {
+        PreferenceUtil SP = PreferenceUtil.getInstance(context);
+        return SP.getInt(context.getString(R.string.preference_primary_color),
+                Config.get().getPrimaryColor());
+    }
 
-  public void setBaseTheme(int baseTheme, boolean permanent) {
-	if(permanent) {
-	  // TODO: 09/08/16 to
-	} else this.baseTheme = baseTheme;
-  }
-
-
-  public static int getAccentColor(Context context) {
-	PreferenceUtil SP = PreferenceUtil.getInstance(context);
-	return SP.getInt(context.getString(R.string.preference_accent_color),
-			getColor(context, R.color.md_light_blue_500));
-  }
-
-  public static int getBaseTheme(Context context) {
-	PreferenceUtil SP = PreferenceUtil.getInstance(context);
-	return SP.getInt(context.getString(R.string.preference_base_theme), LIGHT_THEME);
-  }
-
-  public int getColor(@ColorRes int color) {
-	return ContextCompat.getColor(context, color);
-  }
-
-  public static int getColor(Context context, @ColorRes int color) {
-	return ContextCompat.getColor(context, color);
-  }
-
-  public void themeSeekBar(SeekBar bar) {
-	bar.getProgressDrawable().setColorFilter(new PorterDuffColorFilter(getAccentColor(), PorterDuff.Mode.SRC_IN));
-	bar.getThumb().setColorFilter(new PorterDuffColorFilter(getAccentColor(),PorterDuff.Mode.SRC_IN));
-  }
-
-  public int getBackgroundColor(){
-	int color;
-	switch (baseTheme){
-	  case DARK_THEME:color = getColor(R.color.md_dark_background);break;
-	  case AMOLED_THEME:color = getColor(R.color.md_black_1000);break;
-	  case LIGHT_THEME:
-	  default:color = getColor(R.color.md_light_background);
-	}
-	return color;
-  }
-
-  public int getInvertedBackgroundColor(){
-	int color;
-	switch (baseTheme){
-	  case DARK_THEME:color = getColor(R.color.md_light_background);break;
-	  case AMOLED_THEME:color = getColor(R.color.md_light_background);break;
-	  case LIGHT_THEME:
-	  default:color = getColor(R.color.md_black_1000);
-	}
-	return color;
-  }
-
-  public int getTextColor(){
-	int color;
-	switch (baseTheme){
-	  case DARK_THEME:color = getColor(R.color.md_grey_200);break;
-	  case AMOLED_THEME:color = getColor(R.color.md_grey_200);break;
-	  case LIGHT_THEME:
-	  default:color = getColor(R.color.md_grey_800);
-	}
-	return color;
-  }
-
-  public int getSubTextColor(){
-	int color;
-	switch (baseTheme){
-	  case DARK_THEME:color = getColor(R.color.md_grey_400);break;
-	  case AMOLED_THEME:color = getColor(R.color.md_grey_400);break;
-	  case LIGHT_THEME:
-	  default:color = getColor(R.color.md_grey_600);
-	}
-	return color;
-  }
-
-  public int getCardBackgroundColor(){
-	int color;
-	switch (baseTheme){
-	  case DARK_THEME:color = getColor(R.color.md_dark_cards);break;
-	  case AMOLED_THEME:color = getColor(R.color.md_black_1000);break;
-	  case LIGHT_THEME:default:color = getColor(R.color.md_light_cards);
-	}
-	return color;
-  }
-
-  public int getIconColor(){
-	int color;
-	switch (baseTheme){
-	  case DARK_THEME: case AMOLED_THEME: color = getColor(R.color.md_white_1000);break;
-	  case LIGHT_THEME: default: color = getColor(R.color.md_light_primary_icon);
-	}
-	return color;
-  }
-
-  public IconicsDrawable getToolbarIcon(IIcon icon) {
-	return new IconicsDrawable(context).icon(icon).color(Color.WHITE).sizeDp(18);
-  }
-
-  public IconicsDrawable getIcon(IIcon icon) {
-	return new IconicsDrawable(context).icon(icon).color(getIconColor());
-  }
-
-  public static IconicsDrawable getIcon(Context context, IIcon icon) {
-	return new IconicsDrawable(context).icon(icon).color(Color.WHITE);
-  }
+    public void setBaseTheme(int baseTheme, boolean permanent) {
+        if (permanent) {
+            // TODO: 09/08/16 to
+        } else this.baseTheme = baseTheme;
+    }
 
 
-  public int getDrawerBackground(){
-	int color;
-	switch (baseTheme){
-	  case DARK_THEME:color = getColor(R.color.md_dark_cards);break;
-	  case AMOLED_THEME:color = getColor(R.color.md_black_1000);break;
-	  case LIGHT_THEME:
-	  default: color = getColor(R.color.md_light_cards);
-	}
-	return color;
-  }
+    public static int getAccentColor(Context context) {
+        PreferenceUtil SP = PreferenceUtil.getInstance(context);
+        return SP.getInt(context.getString(R.string.preference_accent_color),
+                Config.get().getAccentColor());
+    }
 
-  public Drawable getPlaceHolder(){
-	switch (baseTheme){
-	  case DARK_THEME : return ContextCompat.getDrawable(context, R.drawable.ic_empty);
-	  case AMOLED_THEME : return ContextCompat.getDrawable(context, R.drawable.ic_empty_amoled);
-	  case LIGHT_THEME: return ContextCompat.getDrawable(context, R.drawable.ic_empty_white);
-	}
-	return null;
-  }
+    public static int getBaseTheme(Context context) {
+        PreferenceUtil SP = PreferenceUtil.getInstance(context);
+        return SP.getInt(context.getString(R.string.preference_base_theme), LIGHT_THEME);
+    }
 
-  public static Drawable getPlaceHolder(Context context){
-	switch (getBaseTheme(context)){
-	  case DARK_THEME : return ContextCompat.getDrawable(context, R.drawable.ic_empty);
-	  case AMOLED_THEME : return ContextCompat.getDrawable(context, R.drawable.ic_empty_amoled);
-	  case LIGHT_THEME: return ContextCompat.getDrawable(context, R.drawable.ic_empty_white);
-	}
-	return null;
-  }
+    public int getColor(@ColorRes int color) {
+        return ContextCompat.getColor(context, color);
+    }
 
-  public int getDialogStyle(){
-	int style;
-	switch (getBaseTheme()){
-	  case DARK_THEME: style = R.style.AlertDialog_Dark;break;
-	  case AMOLED_THEME: style = R.style.AlertDialog_Dark_Amoled;break;
-	  case LIGHT_THEME: default: style = R.style.AlertDialog_Light;break;
-	}
-	return style;
-  }
+    public static int getColor(Context context, @ColorRes int color) {
+        return ContextCompat.getColor(context, color);
+    }
 
-  public int getPopupToolbarStyle(){
-	int style;
-	switch (getBaseTheme()){
-	  case DARK_THEME: style = R.style.DarkActionBarMenu;break;
-	  case AMOLED_THEME: style = R.style.AmoledDarkActionBarMenu;break;
-	  case LIGHT_THEME: default: style = R.style.LightActionBarMenu;
-	}
-	return style;
-  }
+    public void themeSeekBar(SeekBar bar) {
+        bar.getProgressDrawable().setColorFilter(new PorterDuffColorFilter(getAccentColor(), PorterDuff.Mode.SRC_IN));
+        bar.getThumb().setColorFilter(new PorterDuffColorFilter(getAccentColor(), PorterDuff.Mode.SRC_IN));
+    }
 
-  public ArrayAdapter<String> getSpinnerAdapter(ArrayList<String> items) {
-	switch (getBaseTheme()){
-	  case AMOLED_THEME:
-	  case DARK_THEME: return new ArrayAdapter<String>(context, R.layout.spinner_item_light, items);
-	  case LIGHT_THEME: default: return new ArrayAdapter<String>(context, R.layout.spinner_item_dark, items);
-	}
-  }
-
-  public int getDefaultThemeToolbarColor3th(){
-	int color;
-	switch (baseTheme){
-	  case DARK_THEME:color = getColor(R.color.md_black_1000); break;
-	  case AMOLED_THEME:color = getColor(R.color.md_blue_grey_800);break;
-	  case LIGHT_THEME: default: color = getColor(R.color.md_blue_grey_800);
-	}
-	return color;
-  }
-
-    public int getHighlightedItemColor(){
+    public int getBackgroundColor() {
         int color;
-        switch (baseTheme){
-            case DARK_THEME:color = getColor(R.color.md_grey_600);break;
-            case AMOLED_THEME:color = getColor(R.color.md_grey_850);break;
-            case LIGHT_THEME:default:color = getColor(R.color.md_grey_300);
+        switch (baseTheme) {
+            case DARK_THEME:
+                color = getColor(R.color.md_dark_background);
+                break;
+            case AMOLED_THEME:
+                color = getColor(R.color.md_black_1000);
+                break;
+            case LIGHT_THEME:
+            default:
+                color = getColor(R.color.md_light_background);
         }
         return color;
     }
 
-  private ColorStateList getRadioButtonColor(){
-	return new ColorStateList(
-									 new int[][]{
-											 new int[]{ -android.R.attr.state_enabled }, //disabled
-											 new int[]{ android.R.attr.state_enabled } //enabled
-									 }, new int[] { getTextColor(), getAccentColor() });
-  }
+    public int getInvertedBackgroundColor() {
+        int color;
+        switch (baseTheme) {
+            case DARK_THEME:
+                color = getColor(R.color.md_light_background);
+                break;
+            case AMOLED_THEME:
+                color = getColor(R.color.md_light_background);
+                break;
+            case LIGHT_THEME:
+            default:
+                color = getColor(R.color.md_black_1000);
+        }
+        return color;
+    }
 
-  public void updateRadioButtonColor(RadioButton radioButton) {
-	if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-	  radioButton.setButtonTintList(getRadioButtonColor());
-	  radioButton.setTextColor(getTextColor());
-	}
-  }
-  public void setRadioTextButtonColor(RadioButton radioButton, int color) {
-	if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-	  radioButton.setButtonTintList(getRadioButtonColor());
-	  radioButton.setTextColor(color);
-	}
-  }
+    public int getTextColor() {
+        int color;
+        switch (baseTheme) {
+            case DARK_THEME:
+                color = getColor(R.color.md_grey_200);
+                break;
+            case AMOLED_THEME:
+                color = getColor(R.color.md_grey_200);
+                break;
+            case LIGHT_THEME:
+            default:
+                color = getColor(R.color.md_grey_800);
+        }
+        return color;
+    }
 
-  public void updateSwitchColor(SwitchCompat sw, int color){
-	sw.getThumbDrawable().setColorFilter(sw.isChecked() ? color : getSubTextColor(), PorterDuff.Mode.MULTIPLY);
-	sw.getTrackDrawable().setColorFilter(sw.isChecked() ? ColorPalette.getTransparentColor(color,100): getBackgroundColor(), PorterDuff.Mode.MULTIPLY);
-  }
+    public int getSubTextColor() {
+        int color;
+        switch (baseTheme) {
+            case DARK_THEME:
+                color = getColor(R.color.md_grey_400);
+                break;
+            case AMOLED_THEME:
+                color = getColor(R.color.md_grey_400);
+                break;
+            case LIGHT_THEME:
+            default:
+                color = getColor(R.color.md_grey_600);
+        }
+        return color;
+    }
 
-  public void setScrollViewColor(ScrollView scr){
-	try
-	{
-	  Field mScrollCacheField = View.class.getDeclaredField("mScrollCache");
-	  mScrollCacheField.setAccessible(true);
-	  Object mScrollCache = mScrollCacheField.get(scr); // scr is your Scroll View
+    public int getCardBackgroundColor() {
+        int color;
+        switch (baseTheme) {
+            case DARK_THEME:
+                color = getColor(R.color.md_dark_cards);
+                break;
+            case AMOLED_THEME:
+                color = getColor(R.color.md_black_1000);
+                break;
+            case LIGHT_THEME:
+            default:
+                color = getColor(R.color.md_light_cards);
+        }
+        return color;
+    }
 
-	  Field scrollBarField = mScrollCache.getClass().getDeclaredField("scrollBar");
-	  scrollBarField.setAccessible(true);
-	  Object scrollBar = scrollBarField.get(mScrollCache);
+    public int getIconColor() {
+        int color;
+        switch (baseTheme) {
+            case DARK_THEME:
+            case AMOLED_THEME:
+                color = getColor(R.color.md_white_1000);
+                break;
+            case LIGHT_THEME:
+            default:
+                color = getColor(R.color.md_light_primary_icon);
+        }
+        return color;
+    }
 
-	  Method method = scrollBar.getClass().getDeclaredMethod("setVerticalThumbDrawable", Drawable.class);
-	  method.setAccessible(true);
+    public IconicsDrawable getToolbarIcon(IIcon icon) {
+        return new IconicsDrawable(context).icon(icon).color(Color.WHITE).sizeDp(18);
+    }
 
-	  ColorDrawable ColorDraw = new ColorDrawable(getPrimaryColor());
-	  method.invoke(scrollBar, ColorDraw);
-	} catch(Exception e) {
-	  e.printStackTrace();
-	}
-  }
+    public IconicsDrawable getIcon(IIcon icon) {
+        return new IconicsDrawable(context).icon(icon).color(getIconColor());
+    }
 
-  public void setColorScrollBarDrawable(Drawable drawable) {
-	drawable.setColorFilter(new PorterDuffColorFilter(getPrimaryColor(), PorterDuff.Mode.SRC_ATOP));
-  }
+    public static IconicsDrawable getIcon(Context context, IIcon icon) {
+        return new IconicsDrawable(context).icon(icon).color(Color.WHITE);
+    }
 
-  public static void setCursorDrawableColor(EditText editText, int color) {
-	try {
-	  Field fCursorDrawableRes =
-			  TextView.class.getDeclaredField("mCursorDrawableRes");
-	  fCursorDrawableRes.setAccessible(true);
-	  int mCursorDrawableRes = fCursorDrawableRes.getInt(editText);
-	  Field fEditor = TextView.class.getDeclaredField("mEditor");
-	  fEditor.setAccessible(true);
-	  Object editor = fEditor.get(editText);
-	  Class<?> clazz = editor.getClass();
-	  Field fCursorDrawable = clazz.getDeclaredField("mCursorDrawable");
-	  fCursorDrawable.setAccessible(true);
 
-	  Drawable[] drawables = new Drawable[2];
-	  drawables[0] = ContextCompat.getDrawable(editText.getContext(), mCursorDrawableRes);
-	  drawables[1] = ContextCompat.getDrawable(editText.getContext(), mCursorDrawableRes);
-	  drawables[0].setColorFilter(color, PorterDuff.Mode.SRC_IN);
-	  drawables[1].setColorFilter(color, PorterDuff.Mode.SRC_IN);
-	  fCursorDrawable.set(editor, drawables);
-	} catch (final Throwable ignored) {  }
-  }
+    public int getDrawerBackground() {
+        int color;
+        switch (baseTheme) {
+            case DARK_THEME:
+                color = getColor(R.color.md_dark_cards);
+                break;
+            case AMOLED_THEME:
+                color = getColor(R.color.md_black_1000);
+                break;
+            case LIGHT_THEME:
+            default:
+                color = getColor(R.color.md_light_cards);
+        }
+        return color;
+    }
+
+    public Drawable getPlaceHolder() {
+        switch (baseTheme) {
+            case DARK_THEME:
+                return ContextCompat.getDrawable(context, R.drawable.ic_empty);
+            case AMOLED_THEME:
+                return ContextCompat.getDrawable(context, R.drawable.ic_empty_amoled);
+            case LIGHT_THEME:
+                return ContextCompat.getDrawable(context, R.drawable.ic_empty_white);
+        }
+        return null;
+    }
+
+    public static Drawable getPlaceHolder(Context context) {
+        switch (getBaseTheme(context)) {
+            case DARK_THEME:
+                return ContextCompat.getDrawable(context, R.drawable.ic_empty);
+            case AMOLED_THEME:
+                return ContextCompat.getDrawable(context, R.drawable.ic_empty_amoled);
+            case LIGHT_THEME:
+                return ContextCompat.getDrawable(context, R.drawable.ic_empty_white);
+        }
+        return null;
+    }
+
+    public int getDialogStyle() {
+        int style;
+        switch (getBaseTheme()) {
+            case DARK_THEME:
+                style = R.style.AlertDialog_Dark;
+                break;
+            case AMOLED_THEME:
+                style = R.style.AlertDialog_Dark_Amoled;
+                break;
+            case LIGHT_THEME:
+            default:
+                style = R.style.AlertDialog_Light;
+                break;
+        }
+        return style;
+    }
+
+    public int getPopupToolbarStyle() {
+        int style;
+        switch (getBaseTheme()) {
+            case DARK_THEME:
+                style = R.style.DarkActionBarMenu;
+                break;
+            case AMOLED_THEME:
+                style = R.style.AmoledDarkActionBarMenu;
+                break;
+            case LIGHT_THEME:
+            default:
+                style = R.style.LightActionBarMenu;
+        }
+        return style;
+    }
+
+    public ArrayAdapter<String> getSpinnerAdapter(ArrayList<String> items) {
+        switch (getBaseTheme()) {
+            case AMOLED_THEME:
+            case DARK_THEME:
+                return new ArrayAdapter<String>(context, R.layout.spinner_item_light, items);
+            case LIGHT_THEME:
+            default:
+                return new ArrayAdapter<String>(context, R.layout.spinner_item_dark, items);
+        }
+    }
+
+    public int getDefaultThemeToolbarColor3th() {
+        int color;
+        switch (baseTheme) {
+            case DARK_THEME:
+                color = getColor(R.color.md_black_1000);
+                break;
+            case AMOLED_THEME:
+                color = getColor(R.color.md_blue_grey_800);
+                break;
+            case LIGHT_THEME:
+            default:
+                color = getColor(R.color.md_blue_grey_800);
+        }
+        return color;
+    }
+
+    public int getHighlightedItemColor() {
+        int color;
+        switch (baseTheme) {
+            case DARK_THEME:
+                color = getColor(R.color.md_grey_600);
+                break;
+            case AMOLED_THEME:
+                color = getColor(R.color.md_grey_850);
+                break;
+            case LIGHT_THEME:
+            default:
+                color = getColor(R.color.md_grey_300);
+        }
+        return color;
+    }
+
+    private ColorStateList getRadioButtonColor() {
+        return new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_enabled}, //disabled
+                        new int[]{android.R.attr.state_enabled} //enabled
+                }, new int[]{getTextColor(), getAccentColor()});
+    }
+
+    public void updateRadioButtonColor(RadioButton radioButton) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            radioButton.setButtonTintList(getRadioButtonColor());
+            radioButton.setTextColor(getTextColor());
+        }
+    }
+
+    public void setRadioTextButtonColor(RadioButton radioButton, int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            radioButton.setButtonTintList(getRadioButtonColor());
+            radioButton.setTextColor(color);
+        }
+    }
+
+    public void updateSwitchColor(SwitchCompat sw, int color) {
+        sw.getThumbDrawable().setColorFilter(sw.isChecked() ? color : getSubTextColor(), PorterDuff.Mode.MULTIPLY);
+        sw.getTrackDrawable().setColorFilter(sw.isChecked() ? ColorPalette.getTransparentColor(color, 100) : getBackgroundColor(), PorterDuff.Mode.MULTIPLY);
+    }
+
+    public void setScrollViewColor(ScrollView scr) {
+        try {
+            Field mScrollCacheField = View.class.getDeclaredField("mScrollCache");
+            mScrollCacheField.setAccessible(true);
+            Object mScrollCache = mScrollCacheField.get(scr); // scr is your Scroll View
+
+            Field scrollBarField = mScrollCache.getClass().getDeclaredField("scrollBar");
+            scrollBarField.setAccessible(true);
+            Object scrollBar = scrollBarField.get(mScrollCache);
+
+            Method method = scrollBar.getClass().getDeclaredMethod("setVerticalThumbDrawable", Drawable.class);
+            method.setAccessible(true);
+
+            ColorDrawable ColorDraw = new ColorDrawable(getPrimaryColor());
+            method.invoke(scrollBar, ColorDraw);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setColorScrollBarDrawable(Drawable drawable) {
+        drawable.setColorFilter(new PorterDuffColorFilter(getPrimaryColor(), PorterDuff.Mode.SRC_ATOP));
+    }
+
+    public static void setCursorDrawableColor(EditText editText, int color) {
+        try {
+            Field fCursorDrawableRes =
+                    TextView.class.getDeclaredField("mCursorDrawableRes");
+            fCursorDrawableRes.setAccessible(true);
+            int mCursorDrawableRes = fCursorDrawableRes.getInt(editText);
+            Field fEditor = TextView.class.getDeclaredField("mEditor");
+            fEditor.setAccessible(true);
+            Object editor = fEditor.get(editText);
+            Class<?> clazz = editor.getClass();
+            Field fCursorDrawable = clazz.getDeclaredField("mCursorDrawable");
+            fCursorDrawable.setAccessible(true);
+
+            Drawable[] drawables = new Drawable[2];
+            drawables[0] = ContextCompat.getDrawable(editText.getContext(), mCursorDrawableRes);
+            drawables[1] = ContextCompat.getDrawable(editText.getContext(), mCursorDrawableRes);
+            drawables[0].setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            drawables[1].setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            fCursorDrawable.set(editor, drawables);
+        } catch (final Throwable ignored) {
+        }
+    }
 }

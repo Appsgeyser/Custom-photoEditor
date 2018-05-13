@@ -48,7 +48,7 @@ public class StickersFragment extends BaseEditFragment implements View.OnClickLi
 
     }
 
-    public static StickersFragment newInstance(ArrayList<String> list) {
+    public static StickersFragment newInstance(List<String> list) {
         StickersFragment fragment = new StickersFragment();
         fragment.pathList = list;
         return fragment;

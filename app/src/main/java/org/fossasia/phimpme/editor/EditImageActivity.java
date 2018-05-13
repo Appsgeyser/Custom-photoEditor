@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import org.fossasia.phimpme.R;
+import org.fossasia.phimpme.config.Config;
 import org.fossasia.phimpme.editor.fragment.AddTextFragment;
 import org.fossasia.phimpme.editor.fragment.CropFragment;
 import org.fossasia.phimpme.editor.fragment.MainMenuFragment;
@@ -47,6 +48,7 @@ import org.fossasia.phimpme.utilities.SnackBarHandler;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -143,7 +145,8 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
     public PaintFragment paintFragment;
     public CropFragment cropFragment;
     public RotateFragment rotateFragment;
-    private static String stickerType;
+
+    List<String> stickerImegesList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -156,6 +159,12 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
         ButterKnife.bind(this);
         initView();
         getData();
+
+        Config.get().changeIcon(undo, "editor_undo");
+        Config.get().changeIcon(redo, "editor_redo");
+        Config.get().changeIcon(bef_aft, "editor_split");
+        Config.get().changeIcon(save, "editor_save");
+        Config.get().changeIcon(cancel, "editor_cancel");
     }
 
     /**
@@ -277,7 +286,7 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
             case MODE_STICKER_TYPES:
                 return stickerTypesFragment;
             case MODE_STICKERS:
-                stickersFragment = StickersFragment.newInstance(addStickerImages(stickerType));
+                stickersFragment = StickersFragment.newInstance(stickerImegesList);
                 return stickersFragment;
             case MODE_WRITE:
                 return writeFragment;
@@ -318,12 +327,14 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
         if (currentShowingIndex > 0) {
             undo.setColorFilter(Color.BLACK);
             undo.setEnabled(true);
+            Config.get().changeIcon(undo, "editor_undo");
         }else {
             undo.setColorFilter(getResources().getColor(R.color.md_grey_300));
             undo.setEnabled(false);
         }
         if (currentShowingIndex + 1 < bitmapsForUndo.size()) {
             redo.setColorFilter(Color.BLACK);
+            Config.get().changeIcon(redo, "editor_redo");
             redo.setEnabled(true);
         }else {
             redo.setColorFilter(getResources().getColor(R.color.md_grey_300));
@@ -547,8 +558,8 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
         return pathList;
     }
 
-    public void setStickerType(String stickerType) {
-        EditImageActivity.stickerType = stickerType;
+    public void setStickerImegesList(List<String> stickerImegesList) {
+        this.stickerImegesList = stickerImegesList;
     }
 
     @Override

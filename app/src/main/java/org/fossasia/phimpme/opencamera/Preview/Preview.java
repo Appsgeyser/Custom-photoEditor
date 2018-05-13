@@ -45,7 +45,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-
 import org.fossasia.phimpme.R;
 import org.fossasia.phimpme.opencamera.Camera.CameraActivity;
 import org.fossasia.phimpme.opencamera.Camera.MyDebug;
@@ -70,8 +69,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static org.fossasia.phimpme.opencamera.Camera.CameraActivity.toggle;
@@ -1380,7 +1377,7 @@ public class Preview implements SurfaceHolder.Callback, TextureView.SurfaceTextu
                 public void onClick(View v) {
                     SharedPreferences sharedPreferences = getDefaultSharedPreferences(activity);
                     Boolean firstClick = sharedPreferences.getBoolean(activity.getString(R.string.first_click),true);
-					if(firstClick){
+/*					if(firstClick){
 						MaterialShowcaseView.resetSingleUse(activity, SHOWCASE_ID);
 						new MaterialShowcaseView.Builder(activity)
 								.setTarget(toggle)
@@ -1390,7 +1387,7 @@ public class Preview implements SurfaceHolder.Callback, TextureView.SurfaceTextu
 								.singleUse(SHOWCASE_ID) // provide a unique ID used to ensure it is only shown once
 								.show();
 					}
-                    else {
+                    else {*/
                         try {
                             final List<String> colorEffect = getSupportedColorEffects();
                             colorNum++;
@@ -1409,7 +1406,7 @@ public class Preview implements SurfaceHolder.Callback, TextureView.SurfaceTextu
                             Toast.makeText(activity, "Your device does not support any filters", Toast.LENGTH_SHORT).show();
                             Log.e(TAG, "ColorEffect List Size Is Null " );
                         }
-                    }
+                    //}
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean(activity.getString(R.string.first_click), false);
                     editor.apply();

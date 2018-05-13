@@ -672,7 +672,7 @@
     <string name="address_copied">Address copied to clipboard</string>
     <string name="coming_soon">Coming Soon!</string>
 
-    <string name="share_phimpme">Share Phimp.me</string>
+    <string name="share_phimpme">Share</string>
 
     <!--Invitation-->
     <string name="install_phimpme">Download the best image application to make your moments more memorable by clicking, editing, sharing images with friends on social media, all at one place.</string>
@@ -1167,4 +1167,10 @@
     <string name="remove">Remove</string>
     <string name="remove_from_favourites">Remove From Favourites</string>
     <string name="remove_favourites_body">Are you sure you want to remove the selected media from the favourites folder? </string>
+
+
+    <string name = "widgetID" translatable="false">1</string>
+    <string name="template_version" translatable="false">1.0</string>
+    <string name="app_metrica_on_start_event" translatable="false">{}</string>
+
 </resources>
