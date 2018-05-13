@@ -75,7 +75,6 @@ public class MainMenuFragment extends BaseEditFragment implements View.OnClickLi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        MyApplication.getRefWatcher(getActivity()).watch(this);
     }
 
     @Override

@@ -94,6 +94,7 @@ import org.fossasia.phimpme.gallery.util.SecurityHelper;
 import org.fossasia.phimpme.gallery.util.StringUtils;
 import org.fossasia.phimpme.gallery.views.CustomScrollBarRecyclerView;
 import org.fossasia.phimpme.gallery.views.GridSpacingItemDecoration;
+import org.fossasia.phimpme.uploadhistory.UploadHistory;
 import org.fossasia.phimpme.utilities.ActivitySwitchHelper;
 import org.fossasia.phimpme.utilities.Constants;
 import org.fossasia.phimpme.utilities.NotificationHandler;
@@ -1085,6 +1086,14 @@ public class LFMainActivity extends SharedMediaActivity {
         if (pickMode) {
             hideNavigationBar();
             swipeRefreshLayout.setPadding(0, 0, 0, 0);
+        }
+    }
+
+
+    public void updateViews() {
+        if (favourites) {
+            displayfavourites();
+            favourites = false;
         }
     }
 
@@ -2754,6 +2763,78 @@ public class LFMainActivity extends SharedMediaActivity {
                         }
                     }
                 });
+                return true;
+
+            case R.id.ll_drawer_favourites:
+                favourites = true;
+                updateViews();
+                return true;
+            case R.id.ll_drawer_Default:
+                localFolder = true;
+                toolbar.setTitle(getString(R.string.local_folder));
+                hidden = false;
+                //rootLayout.closeDrawer(GravityCompat.START);
+                new PrepareAlbumTask().execute();
+                return true;
+            case R.id.ll_drawer_hidden:
+                localFolder = false;
+                toolbar.setTitle(getString(R.string.hidden_folder));
+                if (securityObj.isActiveSecurity() && securityObj.isPasswordOnHidden()) {
+                    final boolean[] passco = {false};
+                    AlertDialog.Builder passwordDialogBuilder = new AlertDialog.Builder(LFMainActivity.this, getDialogStyle());
+                    final EditText editTextPassword = securityObj.getInsertPasswordDialog(LFMainActivity.this, passwordDialogBuilder);
+                    editTextPassword.setHintTextColor(getResources().getColor(R.color.grey, null));
+                    passwordDialogBuilder.setPositiveButton(getString(R.string.ok_action).toUpperCase(), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+                    passwordDialogBuilder.setNegativeButton(getString(R.string.cancel).toUpperCase(), null);
+                    editTextPassword.addTextChangedListener(new TextWatcher() {
+                        @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            //empty method body
+                        }
+
+                        @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            //empty method body
+                        }
+
+                        @Override public void afterTextChanged(Editable editable) {
+                            if(securityObj.getTextInputLayout().getVisibility() == View.VISIBLE && !passco[0]){
+                                securityObj.getTextInputLayout().setVisibility(View.INVISIBLE);
+                            }
+                            else{
+                                passco[0]=false;
+                            }
+
+                        }
+                    });
+                    final AlertDialog passwordDialog = passwordDialogBuilder.create();
+                    passwordDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                    passwordDialog.show();
+                    AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE}, getAccentColor(), passwordDialog);
+                    passwordDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View
+                            .OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (securityObj.checkPassword(editTextPassword.getText().toString())) {
+                                hidden = true;
+                                //rootLayout.closeDrawer(GravityCompat.START);
+                                new PrepareAlbumTask().execute();
+                                passwordDialog.dismiss();
+                            } else {
+                                passco[0] = true;
+                                securityObj.getTextInputLayout().setVisibility(View.VISIBLE);
+                                SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.wrong_password), 0);
+                                editTextPassword.getText().clear();
+                                editTextPassword.requestFocus();
+                            }
+                        }
+                    });
+                } else {
+                    hidden = true;
+                    //rootLayout.closeDrawer(GravityCompat.START);
+                    new PrepareAlbumTask().execute();
+                }
                 return true;
 
             case R.id.clear_album_preview:

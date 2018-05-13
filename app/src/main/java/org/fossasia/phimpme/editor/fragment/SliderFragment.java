@@ -113,7 +113,6 @@ public class SliderFragment extends BaseEditFragment implements View.OnClickList
     @Override
     public void onDestroy() {
         super.onDestroy();
-        MyApplication.getRefWatcher(getActivity()).watch(this);
     }
 
     @Override

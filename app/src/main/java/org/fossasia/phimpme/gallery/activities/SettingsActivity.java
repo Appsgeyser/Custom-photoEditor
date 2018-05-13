@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
@@ -104,6 +105,14 @@ public class SettingsActivity extends ThemedActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         SP = PreferenceUtil.getInstance(getApplicationContext());
 
+        //TODO APPSGEYSER
+        /*AppsgeyserSDK.isAboutDialogEnabled(this, new AppsgeyserSDK.OnAboutDialogEnableListener() {
+            @Override
+            public void onDialogEnableReceived(boolean enabled) {
+                findViewById(R.id.ll_about).setVisibility(enabled ? View.VISIBLE : View.GONE);
+            }
+        });*/
+
         securityObj = new SecurityHelper(SettingsActivity.this);
 
 
@@ -157,6 +166,30 @@ public class SettingsActivity extends ThemedActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SettingsActivity.this, ExcludedAlbumsActivity.class));
+            }
+        });
+
+        findViewById(R.id.ll_license).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                android.app.AlertDialog.Builder aboutBuilder = new android.app.AlertDialog.Builder(SettingsActivity.this);
+                aboutBuilder.setTitle(R.string.about);
+                aboutBuilder.setMessage(R.string.about_text_links);
+                aboutBuilder.setPositiveButton(android.R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(final DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                aboutBuilder.create().show();
+            }
+        });
+
+        findViewById(R.id.ll_about).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO APPSGEYSER
             }
         });
 
@@ -893,6 +926,8 @@ public class SettingsActivity extends ThemedActivity {
         ((IconicsImageView) findViewById(R.id.n_columns_icon)).setColor(color);
         ((IconicsImageView) findViewById(R.id.nav_bar_icon)).setColor(color);
         ((IconicsImageView) findViewById(R.id.excluded_album_icon)).setColor(color);
+        ((IconicsImageView) findViewById(R.id.license_icon)).setColor(color);
+        ((IconicsImageView) findViewById(R.id.about_icon)).setColor(color);
         ((IconicsImageView) findViewById(R.id.auto_update_media_Icon)).setColor(color);
         ((IconicsImageView) findViewById(R.id.security_icon)).setColor(color);
         ((IconicsImageView) findViewById(R.id.camera_icon)).setColor(color);

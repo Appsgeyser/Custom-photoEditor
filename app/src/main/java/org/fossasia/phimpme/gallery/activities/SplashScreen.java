@@ -9,14 +9,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-//import com.appsgeyser.sdk.AppsgeyserSDK;
-
-import org.fossasia.phimpme.MyApplication;
 import org.fossasia.phimpme.R;
 import org.fossasia.phimpme.base.SharedMediaActivity;
 import org.fossasia.phimpme.config.Config;
@@ -27,12 +23,10 @@ import org.fossasia.phimpme.gallery.util.PreferenceUtil;
 import org.fossasia.phimpme.utilities.ActivitySwitchHelper;
 import org.fossasia.phimpme.utilities.SnackBarHandler;
 
-import java.io.IOException;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pl.droidsonroids.gif.AnimationListener;
-import pl.droidsonroids.gif.GifDrawable;
+
+//import com.appsgeyser.sdk.AppsgeyserSDK;
 
 public class SplashScreen extends SharedMediaActivity {
 
@@ -64,14 +58,13 @@ public class SplashScreen extends SharedMediaActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Config config = Config.get();
+        setContentView(R.layout.activity_splash);
 /*        AppsgeyserSDK.takeOff(this,
                 getString(R.string.widgetID),
                 getString(R.string.app_metrica_on_start_event),
                 getString(R.string.template_version));*/
-
-        Config config = Config.get();
-
-        setContentView(R.layout.activity_splash);
         ActivitySwitchHelper.setContext(this);
         ButterKnife.bind(this);
         SP = PreferenceUtil.getInstance(getApplicationContext());

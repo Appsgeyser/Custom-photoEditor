@@ -682,6 +682,7 @@
     <!--ABOUT STRINGS-->
     <string name="about">About</string>
     <string name="about_version">Version</string>
+    <string name="about_text_links">This application is based on the open source Phimp.me Photo App  - <a href="https://github.com/fossasia/phimpme-android">https://github.com/fossasia/phimpme-android</a> created by Fossasia</string>
 
     <string name="about_license"> License</string>
     <string name="about_license_sub">Check GNU GENERAL PUBLIC License terms used on Phimp.me.</string>

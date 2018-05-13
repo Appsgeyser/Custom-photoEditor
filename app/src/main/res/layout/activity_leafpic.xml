@@ -98,6 +98,12 @@
             </FrameLayout>
         </android.support.v4.widget.NestedScrollView>
 
+<!--        <com.appsgeyser.sdk.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="0dp"
+            android:layout_gravity="bottom"/>-->
         <include
             android:id="@+id/bottombar"
             layout="@layout/element_bottom_navigation"

@@ -279,6 +279,5 @@ public class AddTextFragment extends BaseEditFragment implements TextWatcher, Fo
         if (mSaveTask != null && !mSaveTask.isCancelled()) {
             mSaveTask.cancel(true);
         }
-        MyApplication.getRefWatcher(getActivity()).watch(this);
     }
 }

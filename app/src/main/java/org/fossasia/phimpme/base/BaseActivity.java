@@ -31,6 +31,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     private PreferenceUtil SP;
     private boolean isSWNavBarChecked;
 
+   // private AdView adView;
+
     private int[][] states = new int[][] {
             new int[] {android.R.attr.state_checked}, // checked
             new int[] {-android.R.attr.state_checked}, // unchecked
@@ -61,12 +63,17 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
             presentShowcaseSequence(); // one second delay*/
 
         SP = PreferenceUtil.getInstance(getApplicationContext());
+        //adView = (AdView) findViewById(R.id.adView);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         isSWNavBarChecked = SP.getBoolean(getString(R.string.preference_colored_nav_bar),true);
+        /*AppsgeyserSDK.onResume(this);
+        if (adView != null) {
+            adView.onResume();//into onResume()
+        }*/
     }
 
 /*    private void presentShowcaseSequence() {
@@ -120,6 +127,10 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     public void onPause() {
         super.onPause();
         overridePendingTransition(0, 0);
+        /*AppsgeyserSDK.onPause(this);
+        if (adView != null) {
+            adView.onPause();//into onResume()
+        }*/
     }
 
     @Override

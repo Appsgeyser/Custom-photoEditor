@@ -198,6 +198,12 @@
             </FrameLayout>
 
         </LinearLayout>
+<!--        <com.appsgeyser.sdk.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" />-->
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

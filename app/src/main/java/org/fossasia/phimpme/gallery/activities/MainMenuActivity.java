@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-
-
 import org.fossasia.phimpme.R;
 import org.fossasia.phimpme.accounts.AccountActivity;
 import org.fossasia.phimpme.base.ThemedActivity;
@@ -158,11 +156,9 @@ public class MainMenuActivity extends ThemedActivity {
         /*AppsgeyserSDK.isAboutDialogEnabled(this, new AppsgeyserSDK.OnAboutDialogEnableListener() {
             @Override
             public void onDialogEnableReceived(boolean enabled) {
-                //showAppsgeyserAbout = enabled;
+                showAppsgeyserAbout = enabled;
             }
         });*/
 
     }
-
-
 }

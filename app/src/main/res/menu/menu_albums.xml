@@ -43,6 +43,21 @@
         </item>
     </group>
 
+    <item
+        android:id="@+id/ll_drawer_Default"
+        android:title="@string/local_folder"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/ll_drawer_hidden"
+        android:title="@string/hidden_folder"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/ll_drawer_favourites"
+        android:title="@string/favourite_folder"
+        app:showAsAction="never" />
+
     <group android:id="@+id/photos_option_men">
         <item
             android:id="@+id/sharePhotos"

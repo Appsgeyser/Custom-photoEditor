@@ -77,7 +77,7 @@ public class TwoItemFragment extends BaseEditFragment implements View.OnClickLis
     @Override
     public void onDestroy() {
         super.onDestroy();
-        MyApplication.getRefWatcher(getActivity()).watch(this);
+
     }
 
     @Override

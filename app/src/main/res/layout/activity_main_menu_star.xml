@@ -27,19 +27,12 @@
             android:layout_margin="16dp"
             android:src="@mipmap/ic_launcher" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/logo"
-            android:gravity="center_vertical"
-
-            android:orientation="vertical">
-
 
             <LinearLayout
                 android:id="@+id/topButtonsContainer"
+                android:layout_below="@+id/logo"
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <FrameLayout
@@ -214,6 +207,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/topButtonsContainer"
+                android:layout_above="@+id/adView"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
@@ -254,7 +248,6 @@
                     android:id="@+id/buttonAbout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:layout_marginLeft="20dp"
                     android:foreground="?android:attr/selectableItemBackground">
 
@@ -285,7 +278,13 @@
                 </FrameLayout>
 
             </LinearLayout>
-        </LinearLayout>
+
+<!--        <com.appsgeyser.sdk.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" />-->
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
