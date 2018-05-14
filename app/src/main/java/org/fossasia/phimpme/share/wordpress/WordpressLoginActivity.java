@@ -26,9 +26,13 @@ public class WordpressLoginActivity extends ThemedActivity {
     Toolbar toolbar;
 
     @Override
+    public int getContentViewId() {
+        return R.layout.activity_wordpress_login;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wordpress_login);
         themeHelper = new ThemeHelper(this);
         init();
     }

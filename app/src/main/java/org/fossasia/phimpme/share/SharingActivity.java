@@ -40,6 +40,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.appsgeyser.sdk.AppsgeyserSDK;
+import com.appsgeyser.sdk.ads.FullScreenBanner;
+import com.appsgeyser.sdk.ads.IFullScreenBannerListener;
 import com.box.androidsdk.content.BoxApiFile;
 import com.box.androidsdk.content.BoxConfig;
 import com.box.androidsdk.content.BoxException;
@@ -219,11 +222,14 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
     public static String getClientAuth() {
         return Constants.IMGUR_HEADER_CLIENt + " " + Constants.MY_IMGUR_CLIENT_ID;
     }
+    @Override
+    public int getContentViewId() {
+        return R.layout.activity_share;
+    }
 
     @Override
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        setContentView(R.layout.activity_share);
         caption = null;
         shareAdapter = new ShareAdapter();
         context = this;
@@ -412,6 +418,8 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
         startActivity(Intent.createChooser(share, context.getString(R.string.snapchat)));
     }
 
+    boolean showAds;
+
     /**
      * Method to send the result of the share operation
      * @param code - SUCCESS if user shares it FAIL otherwise.
@@ -432,7 +440,8 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
                 Intent result = new Intent();
                 result.putExtra(Constants.SHARE_RESULT, code);
                 setResult(RESULT_OK, result);
-                finish();
+                showAds = true;
+                //finish();
             } else {
                 uploadHistory.setStatus("FAIL");
                 realm.commitTransaction();
@@ -441,9 +450,12 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
             Intent result = new Intent();
             result.putExtra(Constants.SHARE_RESULT, code);
             setResult(RESULT_OK, result);
-            finish();
+            showAds = true;
+            //finish();
         }
     }
+
+
 
     private void shareToTumblr() {
         new PostToTumblrAsync().execute();
@@ -1287,6 +1299,33 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
     public void onResume() {
         ActivitySwitchHelper.setContext(this);
         super.onResume();
+
+        if(showAds){
+            FullScreenBanner fullScreenBanner = AppsgeyserSDK
+                    .getFullScreenBanner(this);
+            fullScreenBanner.setListener(new IFullScreenBannerListener() {
+                @Override
+                public void onLoadStarted() {
+
+                }
+
+                @Override
+                public void onLoadFinished(FullScreenBanner fullScreenBanner) {
+
+                }
+
+                @Override
+                public void onAdFailedToLoad(Context context, String s) {
+                    finish();
+                }
+
+                @Override
+                public void onAdHided(Context context, String s) {
+                    finish();
+                }
+            });
+            fullScreenBanner.load(com.appsgeyser.sdk.configuration.Constants.BannerLoadTags.ON_START);
+        }
     }
 
     private void startRefresh() {

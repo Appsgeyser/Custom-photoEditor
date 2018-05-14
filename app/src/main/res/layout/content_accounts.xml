@@ -13,7 +13,7 @@
         android:id="@+id/accounts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottombar"
+        android:layout_above="@+id/adView"
         android:layout_below="@id/toolbar">
 
         <android.support.v7.widget.RecyclerView
@@ -22,11 +22,11 @@
             android:layout_height="match_parent"
             android:layout_below="@id/toolbar"></android.support.v7.widget.RecyclerView>
     </android.support.design.widget.CoordinatorLayout>
-<!--    <com.appsgeyser.sdk.ads.AdView
+    <com.appsgeyser.sdk.ads.AdView
         android:id="@+id/adView"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignParentBottom="true"/>-->
+        android:layout_alignParentBottom="true"/>
     <include
         android:id="@+id/bottombar"
         layout="@layout/element_bottom_navigation"

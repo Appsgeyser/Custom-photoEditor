@@ -28,7 +28,7 @@
                       android:layout_marginStart="8dp"
                       android:layout_marginTop="8dp"
                       android:orientation="horizontal"
-                      app:srcCompat="@drawable/ic_launcher_vector">
+                      app:srcCompat="@drawable/app_icon">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -42,7 +42,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    app:srcCompat="@drawable/ic_launcher_vector"/>
+                    app:srcCompat="@drawable/app_icon"/>
 
                 <ImageView
                     android:id="@+id/account_logo_indicator"
@@ -51,7 +51,7 @@
                     android:layout_alignBottom="@+id/account_avatar"
                     android:layout_alignEnd="@+id/account_avatar"
                     android:layout_alignRight="@+id/account_avatar"
-                    app:srcCompat="@drawable/ic_launcher_vector"/>
+                    app:srcCompat="@drawable/app_icon"/>
             </RelativeLayout>
 
             <TextView

@@ -283,7 +283,8 @@
                         android:layout_height="50dp"
                         android:background="@drawable/ripple"
                         android:clickable="true"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <com.mikepenz.iconics.view.IconicsImageView
                             android:id="@+id/about_icon"

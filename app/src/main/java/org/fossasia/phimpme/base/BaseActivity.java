@@ -15,6 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.appsgeyser.sdk.AppsgeyserSDK;
+import com.appsgeyser.sdk.ads.AdView;
+
 import org.fossasia.phimpme.R;
 import org.fossasia.phimpme.accounts.AccountActivity;
 import org.fossasia.phimpme.gallery.activities.LFMainActivity;
@@ -23,15 +26,12 @@ import org.fossasia.phimpme.opencamera.Camera.CameraActivity;
 
 public abstract class BaseActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
-    protected BottomNavigationView navigationView;
     private static final String SHOWCASE_ID = "1";
-    BottomNavigationItemView nav_home;
-    BottomNavigationItemView nav_cam;
-    BottomNavigationItemView nav_acc;
+
     private PreferenceUtil SP;
     private boolean isSWNavBarChecked;
 
-   // private AdView adView;
+    protected AdView adView;
 
     private int[][] states = new int[][] {
             new int[] {android.R.attr.state_checked}, // checked
@@ -49,31 +49,23 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         setContentView(getContentViewId());
         colors[1]  = ContextCompat.getColor(this, R.color.bottom_navigation_tabs);
         ColorStateList myList = new ColorStateList(states, colors);
-        navigationView = (BottomNavigationView) findViewById(R.id.bottombar);
-        navigationView.setItemIconTintList(myList);
-        navigationView.setItemTextColor(myList);
-        navigationView.setOnNavigationItemSelectedListener(this);
-
-         nav_home = (BottomNavigationItemView) findViewById(R.id.navigation_home);
-         nav_cam = (BottomNavigationItemView) findViewById(R.id.navigation_camera);
-         nav_acc = (BottomNavigationItemView) findViewById(R.id.navigation_accounts);
 
         int checkStoragePermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
 /*        if(checkStoragePermission  == PackageManager.PERMISSION_GRANTED)
             presentShowcaseSequence(); // one second delay*/
 
         SP = PreferenceUtil.getInstance(getApplicationContext());
-        //adView = (AdView) findViewById(R.id.adView);
+        adView = (AdView) findViewById(R.id.adView);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         isSWNavBarChecked = SP.getBoolean(getString(R.string.preference_colored_nav_bar),true);
-        /*AppsgeyserSDK.onResume(this);
+        AppsgeyserSDK.onResume(this);
         if (adView != null) {
             adView.onResume();//into onResume()
-        }*/
+        }
     }
 
 /*    private void presentShowcaseSequence() {
@@ -127,10 +119,10 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     public void onPause() {
         super.onPause();
         overridePendingTransition(0, 0);
-        /*AppsgeyserSDK.onPause(this);
+        AppsgeyserSDK.onPause(this);
         if (adView != null) {
-            adView.onPause();//into onResume()
-        }*/
+            adView.onPause();
+        }
     }
 
     @Override
@@ -163,7 +155,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     }
 
     void selectBottomNavigationBarItem(int itemId) {
-        Menu menu = navigationView.getMenu();
+        /*Menu menu = navigationView.getMenu();
         for (int i = 0, size = menu.size(); i < size; i++) {
             MenuItem item = menu.getItem(i);
             boolean shouldBeChecked = item.getItemId() == itemId;
@@ -171,7 +163,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                 item.setChecked(true);
                 break;
             }
-        }
+        }*/
     }
 
     void setIconColor(int color){
@@ -186,7 +178,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     public abstract int getNavigationMenuItemId();
 
     public void setNavigationBarColor(int color) {
-        if(isSWNavBarChecked)
+       /* if(isSWNavBarChecked)
         {
             navigationView.setBackgroundColor(color);
             SP.putInt(getString(R.string.preference_BottomNavColor),color);
@@ -194,14 +186,14 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         {
             navigationView.setBackgroundColor(SP.getInt(getString(R.string.preference_BottomNavColor),color));
         }
-        setIconColor(color);
+        setIconColor(color);*/
     }
 
     /**
      * Animate bottom navigation bar from GONE to VISIBLE
      */
     public void showNavigationBar() {
-        navigationView.animate()
+        /*navigationView.animate()
                 .translationY(0)
                 .alpha(1.0f)
                 .setDuration(400)
@@ -211,14 +203,14 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                         super.onAnimationStart(animation);
                         navigationView.setVisibility(View.VISIBLE);
                     }
-                });
+                });*/
     }
 
     /**
      * Animate bottom navigation bar from VISIBLE to GONE
      */
     public void hideNavigationBar() {
-        navigationView.animate()
+       /* navigationView.animate()
                 .alpha(0.0f)
                 .translationYBy(navigationView.getHeight())
                 .setDuration(400)
@@ -228,6 +220,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                         super.onAnimationEnd(animation);
                         navigationView.setVisibility(View.GONE);
                     }
-                });
+                })*/
     }
 }

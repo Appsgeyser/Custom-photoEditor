@@ -60,11 +60,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.appsgeyser.sdk.AppsgeyserSDK;
+import com.appsgeyser.sdk.ads.AdView;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.view.IconicsImageView;
 
@@ -162,6 +165,7 @@ public class LFMainActivity extends SharedMediaActivity {
     public boolean visible;
     private ArrayList<Album> albList;
 
+    private boolean showFullscreen;
 
     //To handle favourite collection
     private Realm realm;
@@ -187,7 +191,7 @@ public class LFMainActivity extends SharedMediaActivity {
     @BindView(R.id.swipeRefreshLayout)
     protected SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.root_layout)
-    protected FrameLayout rootLayout;
+    protected RelativeLayout rootLayout;
     @BindView(R.id.fab_scroll_up)
     protected FloatingActionButton fabScrollUp;
     @BindView(R.id.appbar_toolbar)
@@ -505,7 +509,7 @@ public class LFMainActivity extends SharedMediaActivity {
                                         securityObj.getTextInputLayout().setVisibility(View.VISIBLE);
                                         SnackBarHandler
                                                 .showWithBottomMargin(rootLayout, getString(R.string.wrong_password),
-                                                        navigationView.getHeight());
+                                                       0);
                                         editTextPassword.getText().clear();
                                         editTextPassword.requestFocus();
                                     }
@@ -624,7 +628,7 @@ public class LFMainActivity extends SharedMediaActivity {
                                         securityObj.getTextInputLayout().setVisibility(View.VISIBLE);
                                         SnackBarHandler
                                                 .showWithBottomMargin(rootLayout, getString(R.string.wrong_password),
-                                                        navigationView.getHeight());
+                                                        0);
                                         editTextPassword.getText().clear();
                                         editTextPassword.requestFocus();
                                     }
@@ -754,6 +758,15 @@ public class LFMainActivity extends SharedMediaActivity {
         }
         invalidateOptionsMenu();
         firstLaunch = false;
+        if(showFullscreen){
+            AppsgeyserSDK.getFullScreenBanner(this).load(com.appsgeyser.sdk.configuration.Constants.BannerLoadTags.ON_START);
+            showFullscreen = false;
+        }
+    }
+
+    @Override
+    public int getContentViewId() {
+        return R.layout.activity_leafpic;
     }
 
     private void displayCurrentAlbumMedia(boolean reload) {
@@ -2129,7 +2142,7 @@ public class LFMainActivity extends SharedMediaActivity {
                                     else {
                                         passco[0] = true;
                                         securityObj.getTextInputLayout().setVisibility(View.VISIBLE);
-                                        SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.wrong_password), navigationView.getHeight());
+                                        SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.wrong_password), 0);
                                         editTextPassword.getText().clear();
                                         editTextPassword.requestFocus();
                                     }
@@ -2235,6 +2248,7 @@ public class LFMainActivity extends SharedMediaActivity {
                         Intent result = new Intent();
                         result.putExtra(Constants.SHARE_RESULT, 0);
                         setResult(RESULT_OK, result);
+                        showFullscreen = true;
                     }
                 } else if (all_photos || fav_photos) {
                     for (Media m : selectedMedias) {
@@ -2250,6 +2264,7 @@ public class LFMainActivity extends SharedMediaActivity {
                         Intent result = new Intent();
                         result.putExtra(Constants.SHARE_RESULT, 0);
                         setResult(RESULT_OK, result);
+                        showFullscreen = true;
                     }
                 }
 
@@ -2389,7 +2404,7 @@ public class LFMainActivity extends SharedMediaActivity {
                         else runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.affix_error), navigationView.getHeight());
+                                SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.affix_error), 0);
 
                             }
                         });
@@ -2550,10 +2565,10 @@ public class LFMainActivity extends SharedMediaActivity {
                                 finishEditMode();
                                 invalidateOptionsMenu();
                                 if (numberOfImagesMoved > 1)
-                                    SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.photos_moved_successfully), navigationView.getHeight());
+                                    SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.photos_moved_successfully), 0);
                                 else
 
-                                    SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.photo_moved_successfully), navigationView.getHeight());
+                                    SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.photo_moved_successfully), 0);
 
                             } else if (numberOfImagesMoved == -1 && getAlbum().getPath().equals(path)) {
                                 //moving to the same folder
@@ -2579,7 +2594,7 @@ public class LFMainActivity extends SharedMediaActivity {
                                     public void onClick(DialogInterface dialog, int id) {
                                         finishEditMode();
                                         invalidateOptionsMenu();
-                                        SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.photo_moved_successfully), navigationView.getHeight());
+                                        SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.photo_moved_successfully), 0);
 
                                     }
                                 });
@@ -2734,7 +2749,7 @@ public class LFMainActivity extends SharedMediaActivity {
                                             editTextNewName.getText().toString());
                                     albumsAdapter.notifyItemChanged(index);
                                 } else {
-                                    SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.rename_no_change), navigationView.getHeight());
+                                    SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.rename_no_change), 0);
                                     rename = true;
                                 }
                             } else {
@@ -2743,22 +2758,22 @@ public class LFMainActivity extends SharedMediaActivity {
                                     toolbar.setTitle(getAlbum().getName());
                                     mediaAdapter.notifyDataSetChanged();
                                 } else {
-                                    SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.rename_no_change), navigationView.getHeight());
+                                    SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.rename_no_change), 0);
                                     rename = true;
                                 }
                             }
                             renameDialog.dismiss();
                             if (success) {
-                                SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.rename_succes), navigationView.getHeight());
+                                SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.rename_succes), 0);
                                 getAlbums().clearSelectedAlbums();
                                 invalidateOptionsMenu();
                             } else if (!rename) {
-                                SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.rename_error), navigationView.getHeight());
+                                SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.rename_error), 0);
                                 requestSdCardPermissions();
                             }
                             swipeRefreshLayout.setRefreshing(false);
                         } else {
-                            SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.insert_something), navigationView.getHeight());
+                            SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.insert_something), 0);
                             editTextNewName.requestFocus();
                         }
                     }
@@ -3020,7 +3035,7 @@ public class LFMainActivity extends SharedMediaActivity {
                     params.setMargins(params.leftMargin,
                             params.topMargin,
                             params.rightMargin,
-                            params.bottomMargin + navigationView.getHeight());
+                            params.bottomMargin + 0);
                     sbView.setLayoutParams(params);
                     snackbar.show();
 
@@ -3425,9 +3440,9 @@ public class LFMainActivity extends SharedMediaActivity {
                 swipeRefreshLayout.setRefreshing(false);
                 finishEditMode();
                 if (moveAction)
-                    SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.photos_moved_successfully), navigationView.getHeight());
+                    SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.photos_moved_successfully), 0);
                 else if (copyAction)
-                    SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.copied_successfully), navigationView.getHeight());
+                    SnackBarHandler.showWithBottomMargin(rootLayout, getString(R.string.copied_successfully), 0);
             } else
                 requestSdCardPermissions();
         }

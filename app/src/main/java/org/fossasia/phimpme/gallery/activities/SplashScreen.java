@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.appsgeyser.sdk.AppsgeyserSDK;
+
 import org.fossasia.phimpme.R;
 import org.fossasia.phimpme.base.SharedMediaActivity;
 import org.fossasia.phimpme.config.Config;
@@ -60,11 +62,10 @@ public class SplashScreen extends SharedMediaActivity {
         super.onCreate(savedInstanceState);
 
         Config config = Config.get();
-        setContentView(R.layout.activity_splash);
-/*        AppsgeyserSDK.takeOff(this,
+        AppsgeyserSDK.takeOff(this,
                 getString(R.string.widgetID),
                 getString(R.string.app_metrica_on_start_event),
-                getString(R.string.template_version));*/
+                getString(R.string.template_version));
         ActivitySwitchHelper.setContext(this);
         ButterKnife.bind(this);
         SP = PreferenceUtil.getInstance(getApplicationContext());
@@ -102,6 +103,11 @@ public class SplashScreen extends SharedMediaActivity {
             String[] permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
             PermissionUtils.requestPermissions(this, READ_EXTERNAL_STORAGE_ID, permissions);
         }
+    }
+
+    @Override
+    public int getContentViewId() {
+        return R.layout.activity_splash;
     }
 
     @Override

@@ -26,7 +26,7 @@ public class NotificationHandler {
         mBuilder.setContentTitle(ActivitySwitchHelper.getContext().getString(action) + " " + ActivitySwitchHelper
                 .getContext().getResources().getString(title))
                 .setLargeIcon(BitmapFactory.decodeResource(ActivitySwitchHelper.getContext().getResources(),
-                        R.mipmap.ic_launcher))
+                        R.drawable.app_icon))
                 .setContentText(ActivitySwitchHelper.getContext().getString(R.string.progress))
                 .setSmallIcon(iconid)
                 .setOngoing(true);

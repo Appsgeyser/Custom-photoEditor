@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_layout"
@@ -9,6 +9,7 @@
         android:id="@+id/cl_main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/adView"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <!---->
         <android.support.design.widget.AppBarLayout
@@ -98,12 +99,7 @@
             </FrameLayout>
         </android.support.v4.widget.NestedScrollView>
 
-<!--        <com.appsgeyser.sdk.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="0dp"
-            android:layout_gravity="bottom"/>-->
+
         <include
             android:id="@+id/bottombar"
             layout="@layout/element_bottom_navigation"
@@ -122,6 +118,12 @@
             app:layout_anchorGravity="top|center"
             app:srcCompat="@drawable/ic_keyboard_arrow_up_black_24dp" />
     </android.support.design.widget.CoordinatorLayout>
-</FrameLayout>
+    <com.appsgeyser.sdk.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="0dp"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>
 
 

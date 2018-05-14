@@ -34,7 +34,6 @@ public class ExcludedAlbumsActivity extends ThemedActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_excluded);
         h = CustomAlbumsHelper.getInstance(getApplicationContext());
 
         excludedFolders = h.getExcludedFolders();
@@ -42,6 +41,12 @@ public class ExcludedAlbumsActivity extends ThemedActivity {
         checkNothing();
         initUI();
     }
+
+    @Override
+    public int getContentViewId() {
+        return R.layout.activity_excluded;
+    }
+
 
     private void checkNothing() {
         TextView a = (TextView) findViewById(R.id.nothing_to_show);

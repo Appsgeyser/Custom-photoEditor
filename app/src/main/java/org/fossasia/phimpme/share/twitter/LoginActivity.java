@@ -72,6 +72,10 @@ public class LoginActivity extends ThemedActivity {
 		twitterCallBack = basicCallBack;
 	}
 
+	@Override
+	public int getContentViewId() {
+		return R.layout.account_login_activity;
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

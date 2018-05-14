@@ -32,7 +32,7 @@ import java.util.ArrayList;
 /**
  * Created by dnld on 23/02/16.
  */
-public class ThemedActivity extends BaseActivity {
+public abstract class ThemedActivity extends BaseActivity {
 
     private ThemeHelper themeHelper;
     private PreferenceUtil SP;
@@ -107,7 +107,7 @@ public class ThemedActivity extends BaseActivity {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void setRecentApp(String text) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setTaskDescription(new ActivityManager.TaskDescription(text, getBitmapFromVectorDrawable(getApplicationContext(),R.drawable.ic_launcher_vector), getPrimaryColor()));
+            setTaskDescription(new ActivityManager.TaskDescription(text, getBitmapFromVectorDrawable(getApplicationContext(),R.drawable.app_icon), getPrimaryColor()));
         }
     }
 
@@ -232,10 +232,6 @@ public class ThemedActivity extends BaseActivity {
         return themeHelper.getToolbarIcon(icon);
     }
 
-    @Override
-    public int getContentViewId() {
-        return R.layout.activity_leafpic;
-    }
 
     @Override
     public int getNavigationMenuItemId() {

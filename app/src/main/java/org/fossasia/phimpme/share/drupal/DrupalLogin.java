@@ -26,10 +26,15 @@ public class DrupalLogin extends ThemedActivity implements View.OnClickListener 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_drupal_login);
         themeHelper = new ThemeHelper(this);
         init();
     }
+
+    @Override
+    public int getContentViewId() {
+        return R.layout.activity_drupal_login;
+    }
+
 
     private void init() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);

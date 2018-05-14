@@ -62,11 +62,14 @@ public class SecurityActivity extends ThemedActivity {
     public ArrayList<Album> albums;
     public ArrayList<String> securedfol = new ArrayList<>();
 
+    @Override
+    public int getContentViewId() {
+        return R.layout.activity_security_layout;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_security_layout);
         ActivitySwitchHelper.setContext(this);
         SP = PreferenceUtil.getInstance(getApplicationContext());
         securityObj = new SecurityHelper(SecurityActivity.this);

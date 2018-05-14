@@ -33,6 +33,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appsgeyser.sdk.AppsgeyserSDK;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.view.IconicsImageView;
@@ -96,22 +97,24 @@ public class SettingsActivity extends ThemedActivity {
 
     private boolean saf_dialog_from_preferences;
 
+    @Override
+    public int getContentViewId() {
+        return R.layout.activity_settings;
+    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         SP = PreferenceUtil.getInstance(getApplicationContext());
 
-        //TODO APPSGEYSER
-        /*AppsgeyserSDK.isAboutDialogEnabled(this, new AppsgeyserSDK.OnAboutDialogEnableListener() {
+        AppsgeyserSDK.isAboutDialogEnabled(this, new AppsgeyserSDK.OnAboutDialogEnableListener() {
             @Override
             public void onDialogEnableReceived(boolean enabled) {
                 findViewById(R.id.ll_about).setVisibility(enabled ? View.VISIBLE : View.GONE);
             }
-        });*/
+        });
 
         securityObj = new SecurityHelper(SettingsActivity.this);
 
@@ -189,7 +192,7 @@ public class SettingsActivity extends ThemedActivity {
         findViewById(R.id.ll_about).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO APPSGEYSER
+                AppsgeyserSDK.showAboutDialog(SettingsActivity.this);
             }
         });
 

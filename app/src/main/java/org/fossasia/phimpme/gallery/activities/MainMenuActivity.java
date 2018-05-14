@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.appsgeyser.sdk.AppsgeyserSDK;
+
 import org.fossasia.phimpme.R;
 import org.fossasia.phimpme.accounts.AccountActivity;
 import org.fossasia.phimpme.base.ThemedActivity;
@@ -89,7 +91,7 @@ public class MainMenuActivity extends ThemedActivity {
     @OnClick(R.id.buttonAbout)
     public void aboutClick(){
         if(showAppsgeyserAbout){
-            //AppsgeyserSDK.showAboutDialog(this);
+            AppsgeyserSDK.showAboutDialog(this);
         }else {
             Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
@@ -105,25 +107,25 @@ public class MainMenuActivity extends ThemedActivity {
         startActivity(sendIntent);
     }
 
+    @Override
+    public int getContentViewId() {
+        switch (Config.get().getMenuLayout()){
+            case "square":
+                return R.layout.activity_main_menu_square;
+            case "star":
+                return (R.layout.activity_main_menu_star);
+            case "simple":
+                return (R.layout.activity_main_menu_simple);
+            default:
+                return (R.layout.activity_main_menu_square);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        switch (Config.get().getMenuLayout()){
-            case "square":
-                setContentView(R.layout.activity_main_menu_square);
-                break;
-            case "star":
-                setContentView(R.layout.activity_main_menu_star);
-                break;
-            case "simple":
-                setContentView(R.layout.activity_main_menu_simple);
-                break;
-            default:
-                setContentView(R.layout.activity_main_menu_square);
-                break;
-        }
+
 
         ButterKnife.bind(this);
 
@@ -153,12 +155,12 @@ public class MainMenuActivity extends ThemedActivity {
         Config.get().changeIcon(imageShare, "menu_share");
         Config.get().changeIcon(imageAbout, "menu_about");
 
-        /*AppsgeyserSDK.isAboutDialogEnabled(this, new AppsgeyserSDK.OnAboutDialogEnableListener() {
+        AppsgeyserSDK.isAboutDialogEnabled(this, new AppsgeyserSDK.OnAboutDialogEnableListener() {
             @Override
             public void onDialogEnableReceived(boolean enabled) {
                 showAppsgeyserAbout = enabled;
             }
-        });*/
+        });
 
     }
 }

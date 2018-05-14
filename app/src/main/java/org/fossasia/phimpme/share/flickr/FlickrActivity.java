@@ -49,7 +49,6 @@ public class FlickrActivity extends ThemedActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.account_login_activity);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         OAuth oauth = getOAuthToken();
         if (oauth == null || oauth.getUser() == null) {
@@ -61,7 +60,10 @@ public class FlickrActivity extends ThemedActivity {
 
     }
 
-
+    @Override
+    public int getContentViewId() {
+        return R.layout.account_login_activity;
+    }
     @Override
     protected void onNewIntent(Intent intent) {
         // this is very important, otherwise you would get a null Scheme in the

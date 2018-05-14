@@ -78,12 +78,12 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                     }
                 })
                 .into(holder.imageView);
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
+        /*holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 basicCallBack.callBack(0, null);
             }
-        });
+        });*/
     }
 
     public interface enterTransition{
@@ -120,7 +120,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         public ViewHolder(View itemView) {
             super(itemView);
             imageView = new PhotoView(ActivitySwitchHelper.context);
-            imageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+            /*imageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
                 @Override
                 public void onPhotoTap(View view, float x, float y) {
                     onSingleTap.singleTap();
@@ -130,9 +130,16 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                 public void onOutsidePhotoTap() {
                     onSingleTap.singleTap();
                 }
+            });*/
+            imageView.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                @Override
+                public void onViewTap(View view, float x, float y) {
+                    onSingleTap.singleTap();
+                }
             });
 
             linearLayout = (LinearLayout) itemView.findViewById(R.id.layout);
+
             WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
             Display display = wm.getDefaultDisplay();
             Point size = new Point();

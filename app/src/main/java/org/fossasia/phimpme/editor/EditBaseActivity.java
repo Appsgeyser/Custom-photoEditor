@@ -19,7 +19,7 @@ import org.fossasia.phimpme.base.ThemedActivity;
 
 import java.io.File;
 
-public class EditBaseActivity extends ThemedActivity {
+public abstract class EditBaseActivity extends ThemedActivity {
 
     protected void checkInitImageLoader() {
         if (!ImageLoader.getInstance().isInited()) {
@@ -65,4 +65,5 @@ public class EditBaseActivity extends ThemedActivity {
         dialog.setMessage(title);
         return dialog;
     }
+
 }

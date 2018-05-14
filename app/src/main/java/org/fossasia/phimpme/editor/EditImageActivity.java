@@ -1,6 +1,7 @@
 package org.fossasia.phimpme.editor;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -18,6 +19,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+
+import com.appsgeyser.sdk.AppsgeyserSDK;
+import com.appsgeyser.sdk.ads.FullScreenBanner;
+import com.appsgeyser.sdk.ads.IFullScreenBannerListener;
 
 import org.fossasia.phimpme.R;
 import org.fossasia.phimpme.config.Config;
@@ -155,7 +160,6 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
             getSupportActionBar().hide();
 
         checkInitImageLoader();
-        setContentView(R.layout.activity_image_edit);
         ButterKnife.bind(this);
         initView();
         getData();
@@ -166,6 +170,12 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
         Config.get().changeIcon(save, "editor_save");
         Config.get().changeIcon(cancel, "editor_cancel");
     }
+
+    @Override
+    public int getContentViewId() {
+        return R.layout.activity_image_edit;
+    }
+
 
     /**
      * Called after onCreate() when the activity is first started. Loads the initial default fragments.
@@ -816,8 +826,32 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
         imageSavedDialogBuilder.setNegativeButton(getString(R.string.cancel).toUpperCase(), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(dialog != null)
-                    onBackPressed();
+                if(dialog != null) {
+                    FullScreenBanner fullScreenBanner = AppsgeyserSDK
+                            .getFullScreenBanner(EditImageActivity.this);
+                    fullScreenBanner.setListener(new IFullScreenBannerListener() {
+                        @Override
+                        public void onLoadStarted() {
+
+                        }
+
+                        @Override
+                        public void onLoadFinished(FullScreenBanner fullScreenBanner) {
+
+                        }
+
+                        @Override
+                        public void onAdFailedToLoad(Context context, String s) {
+                            onBackPressed();
+                        }
+
+                        @Override
+                        public void onAdHided(Context context, String s) {
+                            onBackPressed();
+                        }
+                    });
+                    fullScreenBanner.load(com.appsgeyser.sdk.configuration.Constants.BannerLoadTags.ON_START);
+                }
 
             }
         });

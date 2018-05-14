@@ -40,7 +40,7 @@ public class AboutActivity extends ThemedActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setNavBarColor();
@@ -48,6 +48,12 @@ public class AboutActivity extends ThemedActivity {
         scr = (ScrollView)findViewById(R.id.aboutAct_scrollView);
 
     }
+
+    @Override
+    public int getContentViewId() {
+        return R.layout.activity_about;
+    }
+
 
     @Override
     public void onPostResume() {

@@ -55,9 +55,13 @@ public class PhotoActivity extends ThemedActivity {
     ActionMenuView preview_toolbar;
 
     @Override
+    public int getContentViewId() {
+        return R.layout.activity_preview;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_preview);
         ButterKnife.bind(this);
         toolbar.setBackgroundColor(getPrimaryColor());
         setSupportActionBar(toolbar);

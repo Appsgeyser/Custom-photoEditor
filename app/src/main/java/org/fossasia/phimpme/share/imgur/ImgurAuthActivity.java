@@ -40,6 +40,11 @@ public class ImgurAuthActivity extends ThemedActivity {
     }
 
     @Override
+    public int getContentViewId() {
+        return R.layout.account_login_activity;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_login_activity);

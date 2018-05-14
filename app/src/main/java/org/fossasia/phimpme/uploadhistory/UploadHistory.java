@@ -55,9 +55,13 @@ public class UploadHistory extends ThemedActivity {
     private UploadHistoryAdapter uploadHistoryAdapter;
 
     @Override
+    public int getContentViewId() {
+        return R.layout.upload_history_activity;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.upload_history_activity);
         ButterKnife.bind(this);
         uploadHistoryAdapter = new UploadHistoryAdapter(getPrimaryColor());
         realm = Realm.getDefaultInstance();

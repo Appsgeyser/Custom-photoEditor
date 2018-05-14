@@ -46,7 +46,10 @@ public class NextCloudAuth extends ThemedActivity implements Button.OnClickListe
 
     private OwnCloudClient authClient;
     private String username, password;
-
+    @Override
+    public int getContentViewId() {
+        return R.layout.activity_next_cloud_auth;
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

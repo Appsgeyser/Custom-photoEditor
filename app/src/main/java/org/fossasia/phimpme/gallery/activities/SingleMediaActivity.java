@@ -227,12 +227,17 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
             }
         }
     };
+
+    @Override
+    public int getContentViewId() {
+        return R.layout.activity_pager;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportPostponeEnterTransition();
         context = this;
-        setContentView(R.layout.activity_pager);
         ButterKnife.bind(this);
         relativeLayout = (RelativeLayout) findViewById(R.id.PhotoPager_Layout);
         DisplayMetrics metrics = getResources().getDisplayMetrics();
