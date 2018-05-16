@@ -23,20 +23,7 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".share.twitter.LoginActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="demotwitterlogin"
-                    android:scheme="x-demo-twitter" />
-            </intent-filter>
-        </activity>
 
         <!--
         <activity
@@ -322,10 +309,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-        <provider
-            android:name="com.facebook.FacebookContentProvider"
-            android:authorities="com.facebook.app.FacebookContentProvider125766838062659"
-            android:exported="true" />
 
         <activity
             android:name=".share.SharingActivity"
@@ -337,9 +320,6 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
 
         <activity
             android:name=".accounts.AccountActivity"
@@ -365,31 +345,12 @@
         <activity
             android:name=".share.nextcloud.NextCloudAuth"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".share.flickr.FlickrActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="flickrj-android-sample-oauth" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".share.imgur.ImgurAuthActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".share.owncloud.OwnCloudActivity"
             android:label="@string/title_activity_own_cloud"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="78c6ec5c18fcd10ffbfd28ae038f3311f2763889" />
 
         <activity android:name=".gallery.activities.MainMenuActivity"></activity>
     </application>

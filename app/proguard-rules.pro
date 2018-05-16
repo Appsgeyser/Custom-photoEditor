@@ -314,8 +314,8 @@ public static java.lang.String TABLENAME;
 -dontwarn com.inmobi.**
 -dontwarn com.moat.**
 
--keep class com.yandex.metrica. { *; }
--dontwarn com.yandex.metrica.
+-keep class com.yandex.** { *; }
+-dontwarn com.yandex.**
 
 -dontwarn com.yalantis.ucrop**
 -keep class com.yalantis.ucrop** { *; }

@@ -29,7 +29,6 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
 import static org.fossasia.phimpme.utilities.ActivitySwitchHelper.context;
 import static org.fossasia.phimpme.utilities.ActivitySwitchHelper.getContext;
 
@@ -80,7 +79,7 @@ public class UploadHistoryAdapter extends RecyclerView.Adapter<UploadHistoryAdap
             Uri uri = Uri.fromFile(new File(realmResult.findAll().get(position).getPathname()));
             imagePath = uri.getPath();
 
-            Glide.with(getApplicationContext()).load(uri)
+            Glide.with(context).load(uri)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.uploadImage);
 

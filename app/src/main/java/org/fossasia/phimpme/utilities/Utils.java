@@ -135,15 +135,11 @@ public class Utils {
         if (isAppInstalled(PACKAGE_GOOGLEPLUS,packageManager))
             list.add(AccountDatabase.AccountName.GOOGLEPLUS);
 
-        if (isAppInstalled(PACKAGE_MESSENGER,packageManager))
-            list.add(AccountDatabase.AccountName.MESSENGER);
-
         if (isAppInstalled(PACKAGE_SNAPCHAT,packageManager))
             list.add(AccountDatabase.AccountName.SNAPCHAT);
 
         list.addAll(getLoggedInAccountsList());
-        if (!list.contains(AccountDatabase.AccountName.IMGUR))
-            list.add(AccountDatabase.AccountName.IMGUR);
+
 
         list.add(AccountDatabase.AccountName.OTHERS);
         return list;

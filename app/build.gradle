@@ -124,7 +124,6 @@ dependencies {
 
     compile 'org.jetbrains:annotations-java5:15.0'
     compile 'com.android.support:multidex:1.0.3'
-    compile group: 'com.box', name: 'box-android-sdk', version: '4.0.8'
 
     //icons
     compile 'com.mikepenz:iconics-core:2.8.4@aar'
@@ -139,34 +138,13 @@ dependencies {
     compile 'com.github.shchurov:horizontalwheelview:0.9.5'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
 
-    //twitter
-    compile ("com.twitter.sdk.android:twitter:$rootProject.twitterVersion"){
-        exclude module: 'gson'
-        exclude module: 'okhttp'
-        exclude module: 'picasso'
-    }
-    compile files('libs/twitter4j-core-3.0.5.jar')
-    compile files('libs/twitter4j-media-support-3.0.5.jar')
-
-    //facebook
-    compile 'com.facebook.android:facebook-android-sdk:4.23.0'
-
-    //cloud rail
-    compile 'com.cloudrail:cloudrail-si-android:2.20.1'
 
     //next cloud
     compile ("com.github.nextcloud:android-library:$rootProject.nextCloudVersion"){
         exclude module: 'gson'
     }
 
-    //flickr
-    compile files('libs/flickrj-android-2.1.0.jar')
 
-    //tumblr
-    compile ('com.tumblr:jumblr:0.0.11'){
-        exclude module:'scribe'
-        exclude module:'gson'
-    }
 
     //metadataextractor
     compile 'com.drewnoakes:metadata-extractor:2.9.1'

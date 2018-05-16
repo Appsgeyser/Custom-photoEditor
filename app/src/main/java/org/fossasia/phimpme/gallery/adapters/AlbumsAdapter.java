@@ -35,8 +35,6 @@ import org.fossasia.phimpme.gallery.util.ThemeHelper;
 
 import java.util.ArrayList;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
-
 /**
  * Created by dnld on 1/7/16.
  */
@@ -107,7 +105,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder
                 .listener(new RequestListener<String, Bitmap>() {
                     @Override
                     public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
-                        PreferenceUtil SP = PreferenceUtil.getInstance(getApplicationContext());
+                        PreferenceUtil SP = PreferenceUtil.getInstance(context);
                         SP.putBoolean(holder.picture.getContext().getString(R.string.preference_use_alternative_provider), true);
                         return false;
                     }

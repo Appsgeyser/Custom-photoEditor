@@ -7,10 +7,7 @@ import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.twitter.sdk.android.core.DefaultLogger;
-import com.twitter.sdk.android.core.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterConfig;
+
 
 import org.fossasia.phimpme.config.Config;
 import org.fossasia.phimpme.gallery.data.Album;
@@ -46,13 +43,6 @@ public class MyApplication extends Application {
         applicationContext = getApplicationContext();
 
         MultiDex.install(this);
-
-        TwitterConfig twitterConfig = new TwitterConfig.Builder(this)
-                .logger(new DefaultLogger(Log.DEBUG))
-                .twitterAuthConfig(new TwitterAuthConfig(Constants.TWITTER_CONSUMER_KEY, Constants.TWITTER_CONSUMER_SECRET))
-                .debug(true)
-                .build();
-        Twitter.initialize(twitterConfig);
 
         /**
          * Realm initialization
