@@ -259,7 +259,11 @@ public class RecyclerMenuFragment extends BaseEditFragment {
                     }
                     for (CustomStickerPack customStickerPack: Config.get().getCustomStickerPackList()){
                         titlelist.add(customStickerPack.getName());
-                        iconlist.add(Config.get().createDrawable(getActivity(), customStickerPack.getIconUrl()));
+                        if(customStickerPack.getIconUrl() == null || customStickerPack.getIconUrl().isEmpty()){
+                            iconlist.add(Config.get().createDrawable(getActivity(), Config.get().getIconsMap().get("editor_default_stickers")));
+                        }else {
+                            iconlist.add(Config.get().createDrawable(getActivity(), customStickerPack.getIconUrl()));
+                        }
                     }
                     break;
             }
