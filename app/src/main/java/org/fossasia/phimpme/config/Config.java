@@ -87,6 +87,7 @@ public class Config {
         manageCache();
         try {
             JSONObject settings = new JSONObject(loadSettings(context));
+            name = settings.getString("name");
             logoUrl = settings.getString("logo");
             iconUrl = settings.getString("icon");
             backgroundUrl = settings.getString("background");

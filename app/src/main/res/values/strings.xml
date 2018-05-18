@@ -424,7 +424,6 @@
     <!-- ACTIONS -->
     <string name="sort">Sort</string>
     <string name="camera">Camera</string>
-    <string name="phimpme_camera">Phimp.me Camera</string>
     <string name="exclude">Exclude</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
@@ -675,7 +674,6 @@
 
     <!--Invitation-->
     <string name="install_phimpme">Download the best image application to make your moments more memorable by clicking, editing, sharing images with friends on social media, all at one place.</string>
-    <string name="invitation_deep_link">Download Now: https://nz2sh.app.goo.gl/jTpt</string>
 
 
     <!--ABOUT STRINGS-->
@@ -719,7 +717,6 @@
     <string name="about_support_report_bug_sub">Report bug or request new features.</string>
 
     <string name="about_support_rate">Rate Us</string>
-    <string name="about_support_rate_sub">Leave us a positive rating if you like Phimp.me.</string>
 
     <string name="about_support_github">GitHub</string>
     <string name="about_support_github_sub">Fork the repo and push changes or submit new issues.</string>
@@ -864,11 +861,11 @@
 
     <!--App shortcuts-->
     <string name="camera_short">Camera</string>
-    <string name="camera_long">Opens Phimp.me Camera</string>
+    <string name="camera_long">Opens Camera</string>
     <string name="home_short">Gallery</string>
-    <string name="home_long">Opens Phimp.me Gallery</string>
+    <string name="home_long">Opens Gallery</string>
     <string name="account_short">Accounts</string>
-    <string name="account_long">Opens Phimp.me Account</string>
+    <string name="account_long">Opens Account</string>
 
     <!--All photos-->
     <string name="all_photos">All_photos</string>

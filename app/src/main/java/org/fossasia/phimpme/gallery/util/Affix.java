@@ -7,6 +7,8 @@ import android.media.MediaScannerConnection;
 import android.os.Environment;
 import android.util.Log;
 
+import org.fossasia.phimpme.config.Config;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,7 +21,7 @@ import java.util.ArrayList;
 public class Affix {
 
     // A common editor folder
-    private static final String DIRECTORY_NAME = "phimpme-edit";
+    private static final String DIRECTORY_NAME = "-edit";
 
     public static void AffixBitmapList(Context ctx, ArrayList<Bitmap> bitmapArray, Options options) {
 
@@ -104,7 +106,7 @@ public class Affix {
     }
 
     public static String getDefaultDirectoryPath() {
-        File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + DIRECTORY_NAME);
+        File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + Config.get().getName()+DIRECTORY_NAME);
         if (!dir.exists())
             dir.mkdir();
         return dir.getAbsolutePath();

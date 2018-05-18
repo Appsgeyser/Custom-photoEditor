@@ -22,6 +22,8 @@ import android.provider.MediaStore.Images.ImageColumns;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import org.fossasia.phimpme.config.Config;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -224,7 +226,7 @@ public class StorageUtils {
     // only valid if !isUsingSAF()
     String getSaveLocation() {
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-		return sharedPreferences.getString(PreferenceKeys.getSaveLocationPreferenceKey(), "Phimpme Camera");
+		return sharedPreferences.getString(PreferenceKeys.getSaveLocationPreferenceKey(), Config.get().getName() + " Camera");
     }
     
     // only valid if isUsingSAF()
