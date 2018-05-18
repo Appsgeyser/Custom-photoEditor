@@ -4,4 +4,4 @@ Custom photo editor is a fork of the Phimpme-android for Android, modified to wo
 
 Please notice that this app is unofficial and it's not affiliated with the Phimpme-android project.
 
-Pedometer template using this code would be availiable soon
+Photo editor template using this code would be availiable soon
