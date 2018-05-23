@@ -48,6 +48,7 @@ import org.fossasia.phimpme.gallery.util.AlertDialogsHelper;
 import org.fossasia.phimpme.gallery.util.ColorPalette;
 import org.fossasia.phimpme.share.SharingActivity;
 import org.fossasia.phimpme.utilities.ActivitySwitchHelper;
+import org.fossasia.phimpme.utilities.Constants;
 import org.fossasia.phimpme.utilities.SnackBarHandler;
 
 import java.io.File;
@@ -550,8 +551,7 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
     private void shareImage(String filePath){
         Intent shareIntent = new Intent(EditImageActivity.this, SharingActivity.class);
         shareIntent.putExtra(EXTRA_OUTPUT, filePath);
-        startActivity(shareIntent);
-        finish();
+        startActivityForResult(shareIntent, Constants.REQUEST_SHARE_RESULT);
     }
 
     private ArrayList<String> addStickerImages(String folderPath) {
@@ -859,5 +859,35 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
         AlertDialog alertDialog = imageSavedDialogBuilder.create();
         alertDialog.show();
         AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE}, getAccentColor(), alertDialog);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.REQUEST_SHARE_RESULT && data != null) {
+            FullScreenBanner fullScreenBanner = AppsgeyserSDK
+                    .getFullScreenBanner(EditImageActivity.this);
+            fullScreenBanner.setListener(new IFullScreenBannerListener() {
+                @Override
+                public void onLoadStarted() {
+
+                }
+
+                @Override
+                public void onLoadFinished(FullScreenBanner fullScreenBanner) {
+
+                }
+
+                @Override
+                public void onAdFailedToLoad(Context context, String s) {
+                    finish();
+                }
+
+                @Override
+                public void onAdHided(Context context, String s) {
+                    finish();
+                }
+            });
+            fullScreenBanner.load(com.appsgeyser.sdk.configuration.Constants.BannerLoadTags.ON_START);
+        }
     }
 }

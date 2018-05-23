@@ -29,9 +29,6 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.appsgeyser.sdk.AppsgeyserSDK;
-import com.appsgeyser.sdk.ads.FullScreenBanner;
-import com.appsgeyser.sdk.ads.IFullScreenBannerListener;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.plus.PlusShare;
@@ -304,7 +301,6 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
         startActivity(Intent.createChooser(share, context.getString(R.string.snapchat)));
     }
 
-    boolean showAds;
 
     /**
      * Method to send the result of the share operation
@@ -326,8 +322,7 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
                 Intent result = new Intent();
                 result.putExtra(Constants.SHARE_RESULT, code);
                 setResult(RESULT_OK, result);
-                showAds = true;
-                //finish();
+                finish();
             } else {
                 uploadHistory.setStatus("FAIL");
                 realm.commitTransaction();
@@ -336,8 +331,7 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
             Intent result = new Intent();
             result.putExtra(Constants.SHARE_RESULT, code);
             setResult(RESULT_OK, result);
-            showAds = true;
-            //finish();
+            finish();
         }
     }
 
@@ -628,33 +622,6 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
     public void onResume() {
         ActivitySwitchHelper.setContext(this);
         super.onResume();
-
-        if(showAds){
-            FullScreenBanner fullScreenBanner = AppsgeyserSDK
-                    .getFullScreenBanner(this);
-            fullScreenBanner.setListener(new IFullScreenBannerListener() {
-                @Override
-                public void onLoadStarted() {
-
-                }
-
-                @Override
-                public void onLoadFinished(FullScreenBanner fullScreenBanner) {
-
-                }
-
-                @Override
-                public void onAdFailedToLoad(Context context, String s) {
-                    finish();
-                }
-
-                @Override
-                public void onAdHided(Context context, String s) {
-                    finish();
-                }
-            });
-            fullScreenBanner.load(com.appsgeyser.sdk.configuration.Constants.BannerLoadTags.ON_START);
-        }
     }
 
     private void startRefresh() {

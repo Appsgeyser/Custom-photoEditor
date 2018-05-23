@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -58,6 +59,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.appsgeyser.sdk.AppsgeyserSDK;
+import com.appsgeyser.sdk.ads.FullScreenBanner;
+import com.appsgeyser.sdk.ads.IFullScreenBannerListener;
 import com.bumptech.glide.Glide;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.iconics.view.IconicsImageView;
@@ -91,6 +95,7 @@ import org.fossasia.phimpme.gallery.views.PagerRecyclerView;
 import org.fossasia.phimpme.share.SharingActivity;
 import org.fossasia.phimpme.utilities.ActivitySwitchHelper;
 import org.fossasia.phimpme.utilities.BasicCallBack;
+import org.fossasia.phimpme.utilities.Constants;
 import org.fossasia.phimpme.utilities.SnackBarHandler;
 
 import java.io.File;
@@ -541,6 +546,11 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == Constants.REQUEST_SHARE_RESULT && data != null) {
+            AppsgeyserSDK
+                    .getFullScreenBanner(SingleMediaActivity.this).load(com.appsgeyser.sdk.configuration.Constants.BannerLoadTags.ON_START);
+        }
+
         if (requestCode == REQ_CODE_SPEECH_INPUT && data != null) {
             ArrayList<String> result = data
                     .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
@@ -733,7 +743,7 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
                     share.putExtra(EXTRA_OUTPUT, getAlbum().getCurrentMedia().getPath());
                 else
                     share.putExtra(EXTRA_OUTPUT, listAll.get(current_image_pos).getPath());
-                startActivity(share);
+                startActivityForResult(share, Constants.REQUEST_SHARE_RESULT);
                 return true;
 
             case R.id.action_edit:

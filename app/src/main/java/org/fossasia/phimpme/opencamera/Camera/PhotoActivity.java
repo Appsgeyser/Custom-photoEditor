@@ -2,6 +2,7 @@ package org.fossasia.phimpme.opencamera.Camera;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -19,6 +20,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.appsgeyser.sdk.AppsgeyserSDK;
+import com.appsgeyser.sdk.ads.FullScreenBanner;
+import com.appsgeyser.sdk.ads.IFullScreenBannerListener;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -235,7 +239,30 @@ public class PhotoActivity extends ThemedActivity {
         if (requestCode == Constants.REQUEST_SHARE_RESULT && resultCode == RESULT_OK && data != null) {
             int result = data.getIntExtra(Constants.SHARE_RESULT, Constants.FAIL);
             if(result == Constants.SUCCESS) {
-                finish();
+                FullScreenBanner fullScreenBanner = AppsgeyserSDK
+                        .getFullScreenBanner(PhotoActivity.this);
+                fullScreenBanner.setListener(new IFullScreenBannerListener() {
+                    @Override
+                    public void onLoadStarted() {
+
+                    }
+
+                    @Override
+                    public void onLoadFinished(FullScreenBanner fullScreenBanner) {
+
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(Context context, String s) {
+                        finish();
+                    }
+
+                    @Override
+                    public void onAdHided(Context context, String s) {
+                        finish();
+                    }
+                });
+                fullScreenBanner.load(com.appsgeyser.sdk.configuration.Constants.BannerLoadTags.ON_START);
             }
         }
     }
