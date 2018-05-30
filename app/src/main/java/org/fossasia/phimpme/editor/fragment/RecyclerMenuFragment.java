@@ -1,13 +1,18 @@
 package org.fossasia.phimpme.editor.fragment;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +21,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.fossasia.phimpme.MyApplication;
 import org.fossasia.phimpme.R;
+import org.fossasia.phimpme.config.Config;
+import org.fossasia.phimpme.config.CustomStickerPack;
 import org.fossasia.phimpme.editor.EditImageActivity;
 import org.fossasia.phimpme.editor.filter.PhotoProcessing;
 import org.fossasia.phimpme.editor.view.StickerView;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class RecyclerMenuFragment extends BaseEditFragment {
 
@@ -30,14 +42,31 @@ public class RecyclerMenuFragment extends BaseEditFragment {
     private static ArrayList<Bitmap> filterThumbs;
     View fragmentView;
     private StickerView mStickerView;
-    static final String[] stickerPath = {"stickers/type1", "stickers/type2", "stickers/type3", "stickers/type4", "stickers/type5", "stickers/type6", "stickers/type7"};
+    static final List<List<String>> stickerPath = new ArrayList<>();
     Bitmap currentBitmap,tempBitmap;
     int bmWidth = -1,bmHeight = -1;
     int defaulticon;
-    TypedArray iconlist,titlelist;
+    List<Drawable> iconlist;
+    List<String> titlelist;
+    static int currentSelection = -1;
+
 
     public RecyclerMenuFragment() {
 
+    }
+
+    private ArrayList<String> addStickerImages(String folderPath) {
+        ArrayList<String> pathList = new ArrayList<>();
+        try {
+            String[] files = getActivity().getAssets().list(folderPath);
+
+            for (String name : files) {
+                pathList.add(folderPath + File.separator + name);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return pathList;
     }
 
     public static RecyclerMenuFragment newInstance(int mode) {
@@ -46,17 +75,44 @@ public class RecyclerMenuFragment extends BaseEditFragment {
         return fragment;
     }
 
+    public void clearCurrentSelection(){
+        if(currentSelection != -1){
+            mRecyclerAdapter.mViewHolder holder = (mRecyclerAdapter.mViewHolder) recyclerView.findViewHolderForAdapterPosition(currentSelection);
+            if(holder != null){
+                holder.wrapper.setBackgroundColor(Color.TRANSPARENT);
+            }
+            currentSelection = -1;
+        }
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        if(stickerPath.size() == 0) {
+            if (Config.get().isShowDefaultStickers()) {
+                for (String s : Arrays.asList("stickers/type1", "stickers/type2", "stickers/type3", "stickers/type4", "stickers/type5", "stickers/type6", "stickers/type7")) {
+                    stickerPath.add(addStickerImages(s));
+                }
+            }
+            for (CustomStickerPack customStickerPack : Config.get().getCustomStickerPackList()) {
+                stickerPath.add(customStickerPack.getImageUrlList());
+            }
+        }
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        RecyclerView.LayoutManager layoutManager = null;
+        int orientation = getActivity().getResources().getConfiguration().orientation;
+        if(orientation == Configuration.ORIENTATION_PORTRAIT) {
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        } else if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            layoutManager = new LinearLayoutManager(getActivity());
+        }
         recyclerView = (RecyclerView) fragmentView.findViewById(R.id.editor_recyclerview);
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
-        recyclerView.setLayoutManager(manager);
+
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(new mRecyclerAdapter());
         this.mStickerView = activity.mStickerView;
         onShow();
@@ -123,9 +179,9 @@ public class RecyclerMenuFragment extends BaseEditFragment {
                 filterThumbs = new ArrayList<>();
                 bmWidth = currentBitmap.getWidth();
                 bmHeight = currentBitmap.getHeight();
-                int leng = (titlelist!=null) ? titlelist.length() : 0;
+                int leng = (titlelist!=null) ? titlelist.size() : 0;
                 for (int i = 0; i < leng; i++) {
-                    filterThumbs.add(PhotoProcessing.processImage(getResizedBitmap(currentBitmap, 5), (i + 100 * EditImageActivity.MODE_FILTERS), 100));
+                    filterThumbs.add(PhotoProcessing.processImage(getResizedBitmap(currentBitmap, 3), (i + 100 * EditImageActivity.MODE_FILTERS), 100));
                 }
             }
             return null;
@@ -146,28 +202,69 @@ public class RecyclerMenuFragment extends BaseEditFragment {
         class mViewHolder extends RecyclerView.ViewHolder {
             ImageView icon;
             TextView title;
+            LinearLayout wrapper;
             View view;
             mViewHolder(View itemView) {
                 super(itemView);
                 view = itemView;
                 icon = (ImageView)itemView.findViewById(R.id.editor_item_image);
                 title = (TextView)itemView.findViewById(R.id.editor_item_title);
+                wrapper = (LinearLayout)itemView.findViewById(R.id.ll_effect_wrapper);
             }
         }
 
         mRecyclerAdapter() {
             defaulticon = R.drawable.ic_photo_filter;
+            TypedArray titlesArray;
+
             switch (MODE) {
                 case EditImageActivity.MODE_FILTERS:
-                    titlelist = getActivity().getResources().obtainTypedArray(R.array.filter_titles);
+                    titlelist = new ArrayList<>();
+                    titlesArray = getActivity().getResources().obtainTypedArray(R.array.filter_titles);
+                    for (int i =0; i < titlesArray.length(); i++){
+                        titlelist.add(titlesArray.getString(i));
+                    }
+                    titlesArray.recycle();
                     break;
                 case EditImageActivity.MODE_ENHANCE:
-                    iconlist = getActivity().getResources().obtainTypedArray(R.array.enhance_icons);
-                    titlelist = getActivity().getResources().obtainTypedArray(R.array.enhance_titles);
+                    iconlist = new ArrayList<>();
+
+                    TypedArray typedArray = getActivity().getResources().obtainTypedArray(R.array.enhance_icons);
+                    for (int i =0; i < typedArray.length(); i++){
+                        iconlist.add(getResources().getDrawable(typedArray.getResourceId(i, R.drawable.ic_bright)));
+                    }
+                    typedArray.recycle();
+                    titlelist = new ArrayList<>();
+                    titlesArray = getActivity().getResources().obtainTypedArray(R.array.enhance_titles);
+                    for (int i =0; i < titlesArray.length(); i++){
+                        titlelist.add(titlesArray.getString(i));
+                    }
+                    titlesArray.recycle();
                     break;
                 case EditImageActivity.MODE_STICKER_TYPES:
-                    iconlist = getActivity().getResources().obtainTypedArray(R.array.sticker_icons);
-                    titlelist = getActivity().getResources().obtainTypedArray(R.array.sticker_titles);
+                    iconlist = new ArrayList<>();
+                    titlelist = new ArrayList<>();
+
+                    if(Config.get().isShowDefaultStickers()){
+                        TypedArray iconTypedArray = getActivity().getResources().obtainTypedArray(R.array.sticker_icons);
+                        for (int i =0; i < iconTypedArray.length(); i++){
+                            iconlist.add(getResources().getDrawable(iconTypedArray.getResourceId(i, R.drawable.ic_facial)));
+                        }
+                        iconTypedArray.recycle();
+                        titlesArray = getActivity().getResources().obtainTypedArray(R.array.sticker_titles);
+                        for (int i =0; i < titlesArray.length(); i++){
+                            titlelist.add(titlesArray.getString(i));
+                        }
+                        titlesArray.recycle();
+                    }
+                    for (CustomStickerPack customStickerPack: Config.get().getCustomStickerPackList()){
+                        titlelist.add(customStickerPack.getName());
+                        if(customStickerPack.getIconUrl() == null || customStickerPack.getIconUrl().isEmpty()){
+                            iconlist.add(Config.get().createDrawable(getActivity(), Config.get().getIconsMap().get("editor_default_stickers")));
+                        }else {
+                            iconlist.add(Config.get().createDrawable(getActivity(), customStickerPack.getIconUrl()));
+                        }
+                    }
                     break;
             }
         }
@@ -183,40 +280,78 @@ public class RecyclerMenuFragment extends BaseEditFragment {
         public void onBindViewHolder(mRecyclerAdapter.mViewHolder holder, final int position) {
 
             if (MODE == EditImageActivity.MODE_STICKER_TYPES){
-                holder.itemView.setTag(stickerPath[position]);
+                holder.itemView.setTag(stickerPath.get(position));
             }
             int iconImageSize = (int) getActivity().getResources().getDimension(R.dimen.icon_item_image_size_recycler);
+            int midRowSize = (int) getActivity().getResources().getDimension(R.dimen.editor_mid_row_size);
+
 
             holder.icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
             if (MODE == EditImageActivity.MODE_FILTERS) {
                 if (currentBitmap!=null && filterThumbs!=null && filterThumbs.size() > position) {
                     iconImageSize = (int) getActivity().getResources().getDimension(R.dimen.icon_item_image_size_filter_preview);
+                    midRowSize = (int) getActivity().getResources().getDimension(R.dimen.editor_filter_mid_row_size);
                     holder.icon.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     holder.icon.setImageBitmap(filterThumbs.get(position));
                 }else {
                     holder.icon.setImageResource(defaulticon);
                 }
             }else {
-                holder.icon.setImageResource(iconlist.getResourceId(position, defaulticon));
+                holder.icon.setImageDrawable(iconlist.get(position));
+                if (MODE == EditImageActivity.MODE_ENHANCE) {
+                    Config.get().changeIcon(holder.icon, "editor_enhance" + position);
+                }else if(MODE == EditImageActivity.MODE_STICKER_TYPES){
+                    Config.get().changeIcon(holder.icon, "editor_stickers" + position);
+                }
             }
 
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(iconImageSize,iconImageSize);
             layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
             holder.icon.setLayoutParams(layoutParams);
-            holder.title.setText(titlelist.getString(position));
+            holder.title.setText(titlelist.get(position));
+            LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(midRowSize,midRowSize);
+            layoutParams.gravity = Gravity.CENTER;
+            holder.wrapper.setLayoutParams(layoutParams2);
+            holder.wrapper.setBackgroundColor(Color.TRANSPARENT);
+
+
+            if(currentSelection == position)
+                holder.wrapper.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.md_grey_200));
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    highlightSelectedOption(position, v);
                     itemClicked(position,v);
                 }
             });
         }
 
+        private void highlightSelectedOption(int position, View v) {
+            int color = ContextCompat.getColor(v.getContext(), R.color.md_grey_200);
+
+            if(currentSelection != position){
+                notifyItemChanged(currentSelection);
+                ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+            }
+
+            if(currentSelection != -1 && recyclerView.findViewHolderForAdapterPosition(currentSelection) != null) {
+                    ((mRecyclerAdapter.mViewHolder) recyclerView.findViewHolderForAdapterPosition(currentSelection))
+                            .wrapper
+                            .setBackgroundColor(Color.TRANSPARENT);
+            }
+
+            ((mViewHolder) recyclerView.findViewHolderForAdapterPosition(position))
+                 .wrapper
+                 .setBackgroundColor(color);
+
+            currentSelection = position;
+        }
+
         @Override
         public int getItemCount() {
-            return titlelist.length();
+            return titlelist.size();
         }
 
         void itemClicked(int pos, View view){
@@ -234,8 +369,8 @@ public class RecyclerMenuFragment extends BaseEditFragment {
                     break;
 
                 case EditImageActivity.MODE_STICKER_TYPES:
-                    String data = (String) view.getTag();
-                    activity.setStickerType(data);
+                    List<String> data = (List<String>) view.getTag();
+                    activity.setStickerImegesList(data);
                     activity.changeMode(EditImageActivity.MODE_STICKERS);
                     activity.changeBottomFragment(EditImageActivity.MODE_STICKERS);
                     break;

@@ -58,7 +58,7 @@ public class HandlingAlbums {
       list.addAll(MediaStoreProvider.getAlbums(context, hidden));
     }
     dispAlbums = list;
-    sortAlbums(context);
+    sortAlbums();
   }
 
   public void addAlbum(int position, Album album) {
@@ -97,6 +97,7 @@ public class HandlingAlbums {
     }
   }
 
+  @SuppressWarnings("unchecked")
   public static void addAlbumToBackup(final Context context, final Album album) {
     new Thread(new Runnable() {
       public void run() {
@@ -134,7 +135,7 @@ public class HandlingAlbums {
     }).start();
   }
 
-
+  @SuppressWarnings("unchecked")
   public void restoreBackup(Context context) {
     FileInputStream inStream;
     try {
@@ -256,6 +257,14 @@ public class HandlingAlbums {
     return ContentHelper.deleteFilesInFolder(context, new File(album.getPath()));
   }
 
+  public boolean moveSelectedAlbum(Context context, String targetDir) {
+    Album current = selectedAlbums.get(0);
+    current.updatePhotos(context);
+    current.selectAllPhotos();
+    int ans = current.moveSelectedMedia(context, targetDir);
+    return ans != -1;
+  }
+
   public void excludeSelectedAlbums(Context context) {
     for (Album selectedAlbum : selectedAlbums)
       excludeAlbum(context, selectedAlbum);
@@ -285,22 +294,8 @@ public class HandlingAlbums {
     SP.putInt("albums_sorting_order", sortingOrder.getValue());
   }
 
-  public void sortAlbums(final Context context) {
-
-    Album camera = null;
-
-    for(Album album : dispAlbums)
-      if (album.getName().equals("Phimpme Camera") && dispAlbums.remove(album)) {
-        camera = album;
-        break;
-      }
-
+  public void sortAlbums() {
     Collections.sort(dispAlbums, AlbumsComparators.getComparator(getSortingMode(), getSortingOrder()));
-
-    if (camera != null) {
-      camera.setName(context.getString(R.string.phimpme_camera));
-      dispAlbums.add(0, camera);
-    }
   }
 
   public Album getSelectedAlbum(int index) { return selectedAlbums.get(index); }

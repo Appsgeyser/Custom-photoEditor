@@ -10,7 +10,7 @@ import org.fossasia.phimpme.gallery.data.HandlingAlbums;
  * Created by dnld on 03/08/16.
  */
 
-public class SharedMediaActivity extends ThemedActivity {
+public abstract class SharedMediaActivity extends ThemedActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);

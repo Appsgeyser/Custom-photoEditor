@@ -1,6 +1,7 @@
 package org.fossasia.phimpme.editor.fragment;
 
 import android.content.res.AssetManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.fossasia.phimpme.MyApplication;
 import org.fossasia.phimpme.R;
 import org.fossasia.phimpme.editor.EditImageActivity;
 import org.fossasia.phimpme.editor.task.StickerTask;
@@ -41,11 +43,12 @@ public class StickersFragment extends BaseEditFragment implements View.OnClickLi
     mRecyclerAdapter adapter;
     ImageButton cancel,apply;
 
+
     public StickersFragment() {
 
     }
 
-    public static StickersFragment newInstance(ArrayList<String> list) {
+    public static StickersFragment newInstance(List<String> list) {
         StickersFragment fragment = new StickersFragment();
         fragment.pathList = list;
         return fragment;
@@ -59,8 +62,15 @@ public class StickersFragment extends BaseEditFragment implements View.OnClickLi
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        RecyclerView.LayoutManager manager = null;
+
+        int orientation = getActivity().getResources().getConfiguration().orientation;
+        if(orientation == Configuration.ORIENTATION_PORTRAIT) {
+            manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        } else if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            manager = new LinearLayoutManager(getActivity());
+        }
         recyclerView = (RecyclerView) fragmentView.findViewById(R.id.editor_recyclerview);
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(manager);
 
         cancel = (ImageButton)fragmentView.findViewById(R.id.sticker_cancel);
@@ -80,6 +90,11 @@ public class StickersFragment extends BaseEditFragment implements View.OnClickLi
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         fragmentView = inflater.inflate(R.layout.fragment_editor_stickers, container, false);
@@ -89,6 +104,8 @@ public class StickersFragment extends BaseEditFragment implements View.OnClickLi
     @Override
     public void onShow() {
         activity.changeMode(EditImageActivity.MODE_STICKERS);
+        activity.stickersFragment.getmStickerView().mainImage = activity.mainImage;
+        activity.stickersFragment.getmStickerView().mainBitmap = activity.mainBitmap;
         activity.stickersFragment.getmStickerView().setVisibility(View.VISIBLE);
     }
 
@@ -130,6 +147,7 @@ public class StickersFragment extends BaseEditFragment implements View.OnClickLi
     public void backToMain(){
         activity.mainImage.setImageBitmap(activity.mainBitmap);
         activity.changeMode(EditImageActivity.MODE_STICKER_TYPES);
+        activity.stickerTypesFragment.clearCurrentSelection();
         activity.stickersFragment.getmStickerView().clear();
         activity.stickersFragment.getmStickerView().setVisibility(View.GONE);
         activity.changeBottomFragment(EditImageActivity.MODE_MAIN);
@@ -137,8 +155,8 @@ public class StickersFragment extends BaseEditFragment implements View.OnClickLi
     }
 
     private final class SaveStickersTask extends StickerTask {
-        SaveStickersTask(EditImageActivity activity) {
-            super(activity);
+        SaveStickersTask(EditImageActivity activity, Matrix imageViewMatrix) {
+            super(activity,imageViewMatrix);
         }
 
         @Override
@@ -163,7 +181,7 @@ public class StickersFragment extends BaseEditFragment implements View.OnClickLi
         if (mSaveTask != null) {
             mSaveTask.cancel(true);
         }
-        mSaveTask = new SaveStickersTask((EditImageActivity) getActivity());
+        mSaveTask = new SaveStickersTask(activity,activity.mainImage.getImageViewMatrix());
         mSaveTask.execute(activity.mainBitmap);
     }
 
@@ -209,7 +227,7 @@ public class StickersFragment extends BaseEditFragment implements View.OnClickLi
                 holder.itemView.setTag(path);
                 holder.title.setText("");
 
-            int size = (int) getActivity().getResources().getDimension(R.dimen.icon_item_image_size_filter_preview);
+            int size = (int) getActivity().getResources().getDimension(R.dimen.icon_item_image_size_sticker);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(size,size);
             holder.icon.setLayoutParams(layoutParams);
 

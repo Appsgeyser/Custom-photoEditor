@@ -26,9 +26,13 @@ public class WordpressLoginActivity extends ThemedActivity {
     Toolbar toolbar;
 
     @Override
+    public int getContentViewId() {
+        return R.layout.activity_wordpress_login;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wordpress_login);
         themeHelper = new ThemeHelper(this);
         init();
     }
@@ -45,7 +49,7 @@ public class WordpressLoginActivity extends ThemedActivity {
             public void onClick(View v) {
                 InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                SnackBarHandler.show(parent, "Feature not present");
+                SnackBarHandler.show(parent, R.string.feature_not_present);
                 //Snackbar.make(parent,"Feature not present", BaseTransientBottomBar.LENGTH_LONG).show();
             }
         });

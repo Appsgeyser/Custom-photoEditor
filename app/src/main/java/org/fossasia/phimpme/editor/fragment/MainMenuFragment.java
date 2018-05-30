@@ -7,8 +7,11 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import org.fossasia.phimpme.MyApplication;
 import org.fossasia.phimpme.R;
+import org.fossasia.phimpme.config.Config;
 import org.fossasia.phimpme.editor.EditImageActivity;
 
 public class MainMenuFragment extends BaseEditFragment implements View.OnClickListener{
@@ -42,6 +45,12 @@ public class MainMenuFragment extends BaseEditFragment implements View.OnClickLi
         menu_stickers = view.findViewById(R.id.menu_sticker);
         menu_write = view.findViewById(R.id.menu_write);
 
+        Config.get().changeIcon((ImageView) view.findViewById(R.id.filtericonimage), "editor_filter");
+        Config.get().changeIcon((ImageView) view.findViewById(R.id.enhanceiconimage), "editor_enhance");
+        Config.get().changeIcon((ImageView) view.findViewById(R.id.cropiconimage), "editor_adjust");
+        Config.get().changeIcon((ImageView) view.findViewById(R.id.stickericonimage), "editor_stickers");
+        Config.get().changeIcon((ImageView) view.findViewById(R.id.texticonimage), "editor_write");
+
         menu_filter.setOnClickListener(this);
         menu_enhance.setOnClickListener(this);
         menu_adjust.setOnClickListener(this);
@@ -61,6 +70,11 @@ public class MainMenuFragment extends BaseEditFragment implements View.OnClickLi
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override

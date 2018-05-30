@@ -1,6 +1,7 @@
 package org.fossasia.phimpme.editor;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -9,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -18,10 +20,12 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
+import com.appsgeyser.sdk.AppsgeyserSDK;
+import com.appsgeyser.sdk.ads.FullScreenBanner;
+import com.appsgeyser.sdk.ads.IFullScreenBannerListener;
+
 import org.fossasia.phimpme.R;
-import org.fossasia.phimpme.gallery.util.AlertDialogsHelper;
-import org.fossasia.phimpme.gallery.util.ColorPalette;
-import org.fossasia.phimpme.share.SharingActivity;
+import org.fossasia.phimpme.config.Config;
 import org.fossasia.phimpme.editor.fragment.AddTextFragment;
 import org.fossasia.phimpme.editor.fragment.CropFragment;
 import org.fossasia.phimpme.editor.fragment.MainMenuFragment;
@@ -40,12 +44,17 @@ import org.fossasia.phimpme.editor.view.StickerView;
 import org.fossasia.phimpme.editor.view.TextStickerView;
 import org.fossasia.phimpme.editor.view.imagezoom.ImageViewTouch;
 import org.fossasia.phimpme.editor.view.imagezoom.ImageViewTouchBase;
+import org.fossasia.phimpme.gallery.util.AlertDialogsHelper;
+import org.fossasia.phimpme.gallery.util.ColorPalette;
+import org.fossasia.phimpme.share.SharingActivity;
 import org.fossasia.phimpme.utilities.ActivitySwitchHelper;
+import org.fossasia.phimpme.utilities.Constants;
 import org.fossasia.phimpme.utilities.SnackBarHandler;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -142,7 +151,8 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
     public PaintFragment paintFragment;
     public CropFragment cropFragment;
     public RotateFragment rotateFragment;
-    private static String stickerType;
+
+    List<String> stickerImegesList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -150,13 +160,23 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
         if (getSupportActionBar() != null)
             getSupportActionBar().hide();
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         checkInitImageLoader();
-        setContentView(R.layout.activity_image_edit);
         ButterKnife.bind(this);
         initView();
         getData();
+
+        Config.get().changeIcon(undo, "editor_undo");
+        Config.get().changeIcon(redo, "editor_redo");
+        Config.get().changeIcon(bef_aft, "editor_split");
+        Config.get().changeIcon(save, "editor_save");
+        Config.get().changeIcon(cancel, "editor_cancel");
     }
+
+    @Override
+    public int getContentViewId() {
+        return R.layout.activity_image_edit;
+    }
+
 
     /**
      * Called after onCreate() when the activity is first started. Loads the initial default fragments.
@@ -277,7 +297,7 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
             case MODE_STICKER_TYPES:
                 return stickerTypesFragment;
             case MODE_STICKERS:
-                stickersFragment = StickersFragment.newInstance(addStickerImages(stickerType));
+                stickersFragment = StickersFragment.newInstance(stickerImegesList);
                 return stickersFragment;
             case MODE_WRITE:
                 return writeFragment;
@@ -318,12 +338,14 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
         if (currentShowingIndex > 0) {
             undo.setColorFilter(Color.BLACK);
             undo.setEnabled(true);
+            Config.get().changeIcon(undo, "editor_undo");
         }else {
             undo.setColorFilter(getResources().getColor(R.color.md_grey_300));
             undo.setEnabled(false);
         }
         if (currentShowingIndex + 1 < bitmapsForUndo.size()) {
             redo.setColorFilter(Color.BLACK);
+            Config.get().changeIcon(redo, "editor_redo");
             redo.setEnabled(true);
         }else {
             redo.setColorFilter(getResources().getColor(R.color.md_grey_300));
@@ -497,12 +519,12 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
     protected void onSaveTaskDone() {
         if (mOpTimes > 0 ){
             FileUtil.albumUpdate(this, saveFilePath);
-            shareImage(saveFilePath);
+            imageSavedDialog(saveFilePath);
         }else if(mOpTimes <= 0 && requestCode == 1 ){
-            shareImage(filePath);
+            imageSavedDialog(filePath);
         }else {
             final AlertDialog.Builder discardChangesDialogBuilder = new AlertDialog.Builder(EditImageActivity.this, getDialogStyle());
-            AlertDialogsHelper.getTextDialog(EditImageActivity.this, discardChangesDialogBuilder, R.string.discard_changes_header, R.string.exit_without_edit, null);
+            AlertDialogsHelper.getTextDialog(EditImageActivity.this, discardChangesDialogBuilder, R.string.no_changes_made, R.string.exit_without_edit, null);
             discardChangesDialogBuilder.setPositiveButton(getString(R.string.confirm).toUpperCase(), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -519,6 +541,7 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
 
             AlertDialog alertDialog = discardChangesDialogBuilder.create();
             alertDialog.show();
+            AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE}, getAccentColor(), alertDialog);
         }
     }
 
@@ -528,8 +551,7 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
     private void shareImage(String filePath){
         Intent shareIntent = new Intent(EditImageActivity.this, SharingActivity.class);
         shareIntent.putExtra(EXTRA_OUTPUT, filePath);
-        startActivity(shareIntent);
-        finish();
+        startActivityForResult(shareIntent, Constants.REQUEST_SHARE_RESULT);
     }
 
     private ArrayList<String> addStickerImages(String folderPath) {
@@ -546,8 +568,8 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
         return pathList;
     }
 
-    public void setStickerType(String stickerType) {
-        EditImageActivity.stickerType = stickerType;
+    public void setStickerImegesList(List<String> stickerImegesList) {
+        this.stickerImegesList = stickerImegesList;
     }
 
     @Override
@@ -646,26 +668,27 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
     @Override
     public void onBackPressed() {
         switch (mode){
+            //On pressing back, ask whether the user wants to discard changes or not
             case MODE_SLIDER:
-                sliderFragment.backToMain();
+                showDiscardChangesDialog(MODE_SLIDER,R.string.discard_enhance_message);
                 return;
             case MODE_STICKERS:
-                stickersFragment.backToMain();
+                showDiscardChangesDialog(MODE_STICKERS,R.string.discard_stickers_message);
                 return;
             case MODE_CROP:
-                cropFragment.backToMain();
+                showDiscardChangesDialog(MODE_CROP,R.string.discard_crop_message);
                 return;
             case MODE_ROTATE:
-                rotateFragment.backToMain();
+                showDiscardChangesDialog(MODE_ROTATE,R.string.discard_rotate_message);
                 return;
             case MODE_TEXT:
-                addTextFragment.backToMain();
+                showDiscardChangesDialog(MODE_TEXT,R.string.discard_text_message);
                 return;
             case MODE_PAINT:
-                paintFragment.backToMain();
+                showDiscardChangesDialog(MODE_PAINT,R.string.discard_paint_message);
                 return;
-        }
 
+        }
         //if the image has not been edited or has been edited and saved.
         if (canAutoExit()) {
             finish();
@@ -685,10 +708,59 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
                         dialog.dismiss();
                 }
             });
+            discardChangesDialogBuilder.setNeutralButton(getString(R.string.save_action).toUpperCase(), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    doSaveImage();
+                }
+            });
 
             AlertDialog alertDialog = discardChangesDialogBuilder.create();
             alertDialog.show();
+            AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE, DialogInterface.BUTTON_NEUTRAL}, getAccentColor(), alertDialog);
         }
+    }
+
+    private void showDiscardChangesDialog(final int editMode, @StringRes int message){
+        AlertDialog.Builder discardChangesDialogBuilder=new AlertDialog.Builder(EditImageActivity.this,getDialogStyle());
+        AlertDialogsHelper.getTextDialog(EditImageActivity.this,discardChangesDialogBuilder,R.string.discard_changes_header,message,null);
+        discardChangesDialogBuilder.setNegativeButton(getString(R.string.cancel).toUpperCase(), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(dialog!=null)
+                    dialog.dismiss();
+            }
+        });
+        discardChangesDialogBuilder.setPositiveButton(getString(R.string.confirm).toUpperCase(), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch(editMode){
+                    case MODE_SLIDER:
+                        sliderFragment.backToMain();
+                        break;
+                    case MODE_STICKERS:
+                        stickersFragment.backToMain();
+                        break;
+                    case MODE_CROP:
+                        cropFragment.backToMain();
+                        break;
+                    case MODE_ROTATE:
+                        rotateFragment.backToMain();
+                        break;
+                    case MODE_TEXT:
+                        addTextFragment.backToMain();
+                        break;
+                    case MODE_PAINT:
+                        paintFragment.backToMain();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        AlertDialog alertDialog=discardChangesDialogBuilder.create();
+        alertDialog.show();
+        AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE}, getAccentColor(), alertDialog);
     }
 
     @Override
@@ -734,6 +806,88 @@ public class EditImageActivity extends EditBaseActivity implements View.OnClickL
             case R.id.edit_redo:
                 onRedoPressed();
                 break;
+        }
+    }
+
+    /**
+     * Appears when user saves the image, asking him to share the image or not.
+     * @param path - path of the image
+     */
+    private  void imageSavedDialog(final String path){
+
+        final AlertDialog.Builder imageSavedDialogBuilder = new AlertDialog.Builder(EditImageActivity.this, getDialogStyle());
+        AlertDialogsHelper.getTextDialog(EditImageActivity.this, imageSavedDialogBuilder, R.string.image_saved, R.string.share_image, null);
+        imageSavedDialogBuilder.setPositiveButton(getString(R.string.share).toUpperCase(), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                shareImage(path);
+            }
+        });
+        imageSavedDialogBuilder.setNegativeButton(getString(R.string.cancel).toUpperCase(), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(dialog != null) {
+                    FullScreenBanner fullScreenBanner = AppsgeyserSDK
+                            .getFullScreenBanner(EditImageActivity.this);
+                    fullScreenBanner.setListener(new IFullScreenBannerListener() {
+                        @Override
+                        public void onLoadStarted() {
+
+                        }
+
+                        @Override
+                        public void onLoadFinished(FullScreenBanner fullScreenBanner) {
+
+                        }
+
+                        @Override
+                        public void onAdFailedToLoad(Context context, String s) {
+                            onBackPressed();
+                        }
+
+                        @Override
+                        public void onAdHided(Context context, String s) {
+                            onBackPressed();
+                        }
+                    });
+                    fullScreenBanner.load(com.appsgeyser.sdk.configuration.Constants.BannerLoadTags.ON_START);
+                }
+
+            }
+        });
+
+        AlertDialog alertDialog = imageSavedDialogBuilder.create();
+        alertDialog.show();
+        AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE}, getAccentColor(), alertDialog);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.REQUEST_SHARE_RESULT && data != null) {
+            FullScreenBanner fullScreenBanner = AppsgeyserSDK
+                    .getFullScreenBanner(EditImageActivity.this);
+            fullScreenBanner.setListener(new IFullScreenBannerListener() {
+                @Override
+                public void onLoadStarted() {
+
+                }
+
+                @Override
+                public void onLoadFinished(FullScreenBanner fullScreenBanner) {
+
+                }
+
+                @Override
+                public void onAdFailedToLoad(Context context, String s) {
+                    finish();
+                }
+
+                @Override
+                public void onAdHided(Context context, String s) {
+                    finish();
+                }
+            });
+            fullScreenBanner.load(com.appsgeyser.sdk.configuration.Constants.BannerLoadTags.ON_START);
         }
     }
 }

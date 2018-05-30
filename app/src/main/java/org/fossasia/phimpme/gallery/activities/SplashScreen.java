@@ -3,18 +3,21 @@ package org.fossasia.phimpme.gallery.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.appsgeyser.sdk.AppsgeyserSDK;
+
 import org.fossasia.phimpme.R;
 import org.fossasia.phimpme.base.SharedMediaActivity;
+import org.fossasia.phimpme.config.Config;
 import org.fossasia.phimpme.gallery.data.Album;
 import org.fossasia.phimpme.gallery.util.ColorPalette;
 import org.fossasia.phimpme.gallery.util.PermissionUtils;
@@ -22,12 +25,10 @@ import org.fossasia.phimpme.gallery.util.PreferenceUtil;
 import org.fossasia.phimpme.utilities.ActivitySwitchHelper;
 import org.fossasia.phimpme.utilities.SnackBarHandler;
 
-import java.io.IOException;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pl.droidsonroids.gif.AnimationListener;
-import pl.droidsonroids.gif.GifDrawable;
+
+//import com.appsgeyser.sdk.AppsgeyserSDK;
 
 public class SplashScreen extends SharedMediaActivity {
 
@@ -59,7 +60,12 @@ public class SplashScreen extends SharedMediaActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
+
+        Config config = Config.get();
+        AppsgeyserSDK.takeOff(this,
+                getString(R.string.widgetID),
+                getString(R.string.app_metrica_on_start_event),
+                getString(R.string.template_version));
         ActivitySwitchHelper.setContext(this);
         ButterKnife.bind(this);
         SP = PreferenceUtil.getInstance(getApplicationContext());
@@ -74,28 +80,12 @@ public class SplashScreen extends SharedMediaActivity {
         setNavBarColor();
         setStatusBarColor();
 
-        GifDrawable gifDrawable = null;
-        try {
-            gifDrawable = new GifDrawable( getAssets(), "splash_logo_anim.gif" );
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(!config.getLogoUrl().isEmpty()) {
+            logoView.setImageDrawable(new BitmapDrawable(getResources(), config.readBitmap(this, config.getLogoUrl())));
+        }else {
+            logoView.setImageDrawable(new BitmapDrawable(getResources(), config.readBitmap(this, config.getIconUrl())));
         }
-        if (gifDrawable != null) {
-            gifDrawable.addAnimationListener(new AnimationListener() {
-                @Override
-                public void onAnimationCompleted(int loopNumber) {
-                    Log.d("splashscreen","Gif animation completed");
-                    if (can_be_finished && nextIntent != null){
-                        startActivity(nextIntent);
-                        finish();
-                    }else {
-                        can_be_finished = true;
-                    }
-                }
-            });
-        }
-        logoView.setImageDrawable(gifDrawable);
-
+        can_be_finished = true;
         if (PermissionUtils.isDeviceInfoGranted(this)) {
             PICK_INTENT = getIntent().getAction().equals(Intent.ACTION_GET_CONTENT) || getIntent().getAction().equals(Intent.ACTION_PICK);
             if (getIntent().getAction().equals(ACTION_OPEN_ALBUM)) {
@@ -113,6 +103,11 @@ public class SplashScreen extends SharedMediaActivity {
             String[] permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
             PermissionUtils.requestPermissions(this, READ_EXTERNAL_STORAGE_ID, permissions);
         }
+    }
+
+    @Override
+    public int getContentViewId() {
+        return R.layout.activity_splash;
     }
 
     @Override
@@ -173,7 +168,7 @@ public class SplashScreen extends SharedMediaActivity {
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
 
-            nextIntent = new Intent(SplashScreen.this, LFMainActivity.class);
+            nextIntent = new Intent(SplashScreen.this, MainMenuActivity.class);
             Bundle b = new Bundle();
             b.putInt(CONTENT, result ? ALBUMS_PREFETCHED : ALBUMS_BACKUP);
             b.putBoolean(PICK_MODE, PICK_INTENT);
@@ -203,7 +198,7 @@ public class SplashScreen extends SharedMediaActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            nextIntent = new Intent(SplashScreen.this, LFMainActivity.class);
+            nextIntent = new Intent(SplashScreen.this, MainMenuActivity.class);
             Bundle b = new Bundle();
             getAlbums().addAlbum(0, album);
             b.putInt(CONTENT, PHOTOS_PREFETCHED);

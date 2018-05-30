@@ -240,6 +240,79 @@
                                 android:textSize="@dimen/sub_medium_text" />
                         </LinearLayout>
                     </LinearLayout>
+
+                    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/ll_license"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/ripple"
+                        android:clickable="true"
+                        android:orientation="horizontal">
+
+                        <com.mikepenz.iconics.view.IconicsImageView
+                            android:id="@+id/license_icon"
+                            android:layout_width="@dimen/icon_width_height"
+                            android:layout_height="@dimen/icon_width_height"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="@dimen/big_spacing"
+                            android:layout_marginRight="@dimen/big_spacing"
+                            app:iiv_icon="gmd-book" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:paddingBottom="@dimen/small_spacing"
+                            android:paddingRight="@dimen/medium_spacing"
+                            android:paddingTop="@dimen/small_spacing">
+
+                            <TextView
+                                android:id="@+id/License_Item_Title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:text="@string/about_license"
+                                android:textColor="@color/md_dark_background"
+                                android:gravity="center_vertical"
+                                android:textSize="@dimen/medium_text" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/ll_about"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/ripple"
+                        android:clickable="true"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <com.mikepenz.iconics.view.IconicsImageView
+                            android:id="@+id/about_icon"
+                            android:layout_width="@dimen/icon_width_height"
+                            android:layout_height="@dimen/icon_width_height"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="@dimen/big_spacing"
+                            android:layout_marginRight="@dimen/big_spacing"
+                            app:iiv_icon="gmd-info" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:paddingBottom="@dimen/small_spacing"
+                            android:paddingRight="@dimen/medium_spacing"
+                            android:paddingTop="@dimen/small_spacing">
+
+                            <TextView
+                                android:id="@+id/About_Item_Title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:text="@string/about"
+                                android:gravity="center_vertical"
+                                android:textColor="@color/md_dark_background"
+                                android:textSize="@dimen/medium_text" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
@@ -539,7 +612,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
-                            android:paddingBottom="@dimen/medium_spacing"
+                            android:layout_marginBottom="@dimen/medium_spacing"
                             android:paddingRight="@dimen/medium_spacing"
                             android:paddingTop="@dimen/small_spacing">
 
@@ -679,6 +752,8 @@
                         android:id="@+id/ll_switch_picture_orientation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/ripple"
+                        android:clickable="true"
                         android:orientation="horizontal">
 
                         <com.mikepenz.iconics.view.IconicsImageView
@@ -1000,6 +1075,61 @@
                                 android:layout_gravity="center_vertical"
                                 android:button="@null"
                                 android:hapticFeedbackEnabled="true" />
+                        </RelativeLayout>
+                    </LinearLayout>
+                    <!--  RESET SETTINGS  -->
+
+                    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/ll_reset_settings"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ripple"
+                        android:clickable="true"
+                        android:orientation="horizontal">
+
+                        <com.mikepenz.iconics.view.IconicsImageView
+                            android:id="@+id/reset_settings_Icon"
+                            android:layout_width="@dimen/icon_width_height"
+                            android:layout_height="@dimen/icon_width_height"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="@dimen/big_spacing"
+                            android:layout_marginRight="@dimen/big_spacing"
+                            app:iiv_icon="gmd-power_settings_new" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingBottom="@dimen/small_spacing"
+                            android:paddingRight="@dimen/medium_spacing"
+                            android:paddingTop="@dimen/medium_spacing">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="44dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/reset_settings_Item"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/reset"
+                                    android:textColor="@color/md_dark_background"
+                                    android:textSize="@dimen/medium_text" />
+
+                                <TextView
+                                    android:id="@+id/reset_settings_Item_sub"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Reset all settings to default"
+                                    android:textColor="@color/md_grey_400"
+                                    android:textSize="@dimen/sub_medium_text" />
+                            </LinearLayout>
+
+
                         </RelativeLayout>
                     </LinearLayout>
                 </LinearLayout>

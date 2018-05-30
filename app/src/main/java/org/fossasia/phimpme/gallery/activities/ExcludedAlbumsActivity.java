@@ -28,13 +28,12 @@ import java.util.ArrayList;
  */
 public class ExcludedAlbumsActivity extends ThemedActivity {
 
-    private ArrayList<File> excludedFolders = new ArrayList<File>();
+    private ArrayList<File> excludedFolders = new ArrayList<>();
     private CustomAlbumsHelper h;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_excluded);
         h = CustomAlbumsHelper.getInstance(getApplicationContext());
 
         excludedFolders = h.getExcludedFolders();
@@ -42,6 +41,12 @@ public class ExcludedAlbumsActivity extends ThemedActivity {
         checkNothing();
         initUI();
     }
+
+    @Override
+    public int getContentViewId() {
+        return R.layout.activity_excluded;
+    }
+
 
     private void checkNothing() {
         TextView a = (TextView) findViewById(R.id.nothing_to_show);
@@ -77,7 +82,6 @@ public class ExcludedAlbumsActivity extends ThemedActivity {
                 onBackPressed();
             }
         });
-        setStatusBarColor();
         setNavBarColor();
         setRecentApp(getString(R.string.excluded_albums));
 
@@ -88,6 +92,7 @@ public class ExcludedAlbumsActivity extends ThemedActivity {
     public void onResume() {
         super.onResume();
         ActivitySwitchHelper.setContext(this);
+        setStatusBarColor();
     }
 
     private class ExcludedItemsAdapter extends RecyclerView.Adapter<ExcludedItemsAdapter.ViewHolder> {
